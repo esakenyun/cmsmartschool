@@ -1,4 +1,4 @@
-import { AdminStatus, TeacherAdminData } from "./types";
+import { AdminStatus, TeacherAdminData } from "../types/types";
 
 export const DUMMY_PDF_URL = "https://www.orimi.com/pdf-test.pdf";
 

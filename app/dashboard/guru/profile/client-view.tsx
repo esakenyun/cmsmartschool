@@ -1,27 +1,39 @@
 "use client";
-
-import { Edit3, Save, Upload, User, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { getUserByRole, updateUser } from "@/services/user-service";
+import {
+  Edit3,
+  Save,
+  Upload,
+  User,
+  Loader2,
+  ChevronDown,
+  Plus,
+} from "lucide-react";
+import { useState } from "react";
+import { updateUser } from "@/features/auth/services/auth-service";
+import { UserData } from "@/features/auth/types/types";
 import Image from "next/image";
 import { toast } from "sonner";
-import { ProfileSkeleton } from "@/components/skeletons/profile-skeleton";
 
-export default function ProfileGuruContent() {
+interface ProfileGuruContentProps {
+  initialData?: UserData;
+}
+
+export default function ProfileGuruContent({
+  initialData,
+}: ProfileGuruContentProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [profile, setProfile] = useState({
-    id: "",
-    name: "",
-    nip: "",
-    tmt: "",
-    ttl: "",
-    address: "",
-    position: "",
-    email: "",
-    phone: "",
-    imageUrl: "",
+    id: initialData?.id || "",
+    name: initialData?.name || "",
+    nip: initialData?.nip || "",
+    tmt: initialData?.tmt || "",
+    ttl: initialData?.ttl || "",
+    address: initialData?.address || "",
+    position: initialData?.jabatan || "",
+    email: initialData?.email || "",
+    phone: initialData?.numberhandphone || "",
+    imageUrl: initialData?.imageUrl || "",
   });
 
   // Helper to format date string to "DD MMMM YYYY" or keep as is if not valid date
@@ -50,35 +62,6 @@ export default function ProfileGuruContent() {
     }
   };
 
-  useEffect(() => {
-    const initProfile = async () => {
-      try {
-        const guru = await getUserByRole("guru");
-
-        if (guru) {
-          setProfile({
-            id: guru.id,
-            name: guru.name,
-            nip: guru.nip,
-            tmt: guru.tmt,
-            ttl: guru.ttl,
-            address: guru.address,
-            position: guru.jabatan,
-            email: guru.email,
-            phone: guru.numberhandphone,
-            imageUrl: guru.imageUrl,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initProfile();
-  }, []);
-
   const handleSave = async () => {
     setIsSaving(true);
     try {
@@ -105,10 +88,6 @@ export default function ProfileGuruContent() {
       setIsSaving(false);
     }
   };
-
-  if (loading) {
-    return <ProfileSkeleton />;
-  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -151,36 +130,59 @@ export default function ProfileGuruContent() {
                 </span>
               </div>
             </div>
-            <button
-              onClick={() => {
-                if (isEditing) {
-                  handleSave();
-                } else {
-                  setIsEditing(true);
-                }
-              }}
-              disabled={isSaving}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isEditing
-                  ? "bg-emerald-600 text-white disabled:bg-emerald-400"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-              }`}
-            >
-              {isEditing ? (
-                isSaving ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+            <div className="flex flex-col md:flex-row gap-2 text-xs md:text-sm">
+              <div className="relative inline-flex items-center">
+                {/* Prefix */}
+                <span className="absolute left-3 text-xs font-bold text-emerald-600 uppercase pointer-events-none">
+                  TA:
+                </span>
+
+                <select
+                  className="appearance-none bg-emerald-50 border border-emerald-100
+      text-emerald-700 font-bold text-sm rounded-lg
+      py-1.5 pl-12 pr-8 cursor-pointer
+      hover:bg-emerald-100 focus:outline-none
+      focus:ring-2 focus:ring-emerald-500 transition-colors"
+                >
+                  <option value="2024 / 2025">2024 / 2025</option>
+                  <option value="2025 / 2026">2025 / 2026</option>
+                  <option value="2026 / 2027">2026 / 2027</option>
+                </select>
+
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 pointer-events-none" />
+              </div>
+
+              <button
+                onClick={() => {
+                  if (isEditing) {
+                    handleSave();
+                  } else {
+                    setIsEditing(true);
+                  }
+                }}
+                disabled={isSaving}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isEditing
+                    ? "bg-emerald-600 text-white disabled:bg-emerald-400"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {isEditing ? (
+                  isSaving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )
                 ) : (
-                  <Save className="w-4 h-4" />
-                )
-              ) : (
-                <Edit3 className="w-4 h-4" />
-              )}
-              {isEditing
-                ? isSaving
-                  ? "Menyimpan..."
-                  : "Simpan Profil"
-                : "Edit Profil"}
-            </button>
+                  <Edit3 className="w-4 h-4" />
+                )}
+                {isEditing
+                  ? isSaving
+                    ? "Menyimpan..."
+                    : "Simpan Profil"
+                  : "Edit Profil"}
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -264,6 +266,85 @@ export default function ProfileGuruContent() {
                 </p>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-slate-800">
+                Riwayat Pelatihan
+              </h2>
+              <p className="text-sm text-slate-500">
+                Daftar pelatihan dan workshop yang telah diikuti
+              </p>
+            </div>
+
+            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
+              <Plus className="w-4 h-4" />
+              Tambah Pelatihan
+            </button>
+          </div>
+
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full border border-slate-200 rounded-lg overflow-hidden">
+              <thead className="bg-slate-100">
+                <tr className="text-left text-sm font-semibold text-slate-600">
+                  <th className="px-4 py-3">Nama Pelatihan</th>
+                  <th className="px-4 py-3">Tanggal</th>
+                  <th className="px-4 py-3">Penyelenggara</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-200 text-sm">
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Workshop Kurikulum Merdeka
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-12-19</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Dinas Pendidikan Kota
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Pelatihan Media Pembelajaran Digital
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-10-05</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Balai Guru Penggerak
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Seminar Penguatan Profil Pelajar Pancasila
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-08-21</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Kementerian Pendidikan
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

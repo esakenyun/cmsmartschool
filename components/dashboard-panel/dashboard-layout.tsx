@@ -4,7 +4,8 @@ import { useSidebar } from "@/hooks/use-sidebar";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./sidebar";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation"; // Removed
+import { useRoleSettings } from "@/features/auth/hooks/use-role-settings";
 
 export default function DashboardPanelLayout({
   children,
@@ -14,47 +15,17 @@ export default function DashboardPanelLayout({
   unit?: string;
 }) {
   const sidebar = useStore(useSidebar, (x) => x);
-  const pathname = usePathname();
+  const {
+    sidebarBg,
+    sidebarText,
+    activeColor,
+    activeHoverColor,
+    roleTitle,
+    dashboardHref,
+  } = useRoleSettings();
+
   if (!sidebar) return null;
   const { getOpenState, settings } = sidebar;
-
-  // Role determination logic
-  let sidebarBg = "bg-white"; // default
-  let sidebarText = "text-black";
-  let activeColor = "bg-emerald-500"; // default fallback
-  let activeHoverColor = "hover:bg-emerald-500";
-  let roleTitle = "Smart School";
-  let dashboardHref = "/dashboard";
-
-  if (pathname.includes("/dashboard/pimpinan")) {
-    sidebarBg = "bg-slate-900";
-    sidebarText = "text-white";
-    activeColor = "bg-indigo-500 text-white";
-    activeHoverColor = "hover:bg-indigo-500 hover:text-white";
-    roleTitle = "Pimpinan";
-    dashboardHref = "/dashboard/pimpinan";
-  } else if (pathname.includes("/dashboard/kepala-sekolah")) {
-    sidebarBg = "bg-blue-900";
-    sidebarText = "text-white";
-    activeColor = "bg-blue-500 text-white";
-    activeHoverColor = "hover:bg-blue-500 hover:text-white";
-    roleTitle = "Kepala Sekolah";
-    dashboardHref = "/dashboard/kepala-sekolah";
-  } else if (pathname.includes("/dashboard/guru")) {
-    sidebarBg = "bg-white";
-    sidebarText = "text-black";
-    activeColor = "bg-emerald-500 text-white";
-    activeHoverColor = "hover:bg-emerald-500 hover:text-white";
-    roleTitle = "Guru";
-    dashboardHref = "/dashboard/guru";
-  } else if (pathname.includes("/dashboard/siswa")) {
-    sidebarBg = "bg-white";
-    sidebarText = "text-black";
-    activeColor = "bg-orange-500 text-white";
-    activeHoverColor = "hover:bg-orange-500 hover:text-white";
-    roleTitle = "Siswa";
-    dashboardHref = "/dashboard/siswa";
-  }
 
   return (
     <>

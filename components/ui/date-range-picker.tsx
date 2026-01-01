@@ -18,12 +18,14 @@ interface DateRangePickerProps {
   };
   setDate: (date: { startDate: Date; endDate: Date; key: string }) => void;
   className?: string;
+  align?: "start" | "center" | "end";
 }
 
 export function DateRangePicker({
   date,
   setDate,
   className,
+  align = "start",
 }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -53,6 +55,12 @@ export function DateRangePicker({
     });
   };
 
+  const alignmentClasses = {
+    start: "left-0",
+    center: "left-1/2 -translate-x-1/2",
+    end: "right-0",
+  };
+
   return (
     <div className={cn("relative grid gap-2", className)} ref={containerRef}>
       <button
@@ -77,7 +85,12 @@ export function DateRangePicker({
         )}
       </button>
       {isOpen && (
-        <div className="absolute top-full mt-2 z-50 p-0 bg-white border border-slate-200 rounded-lg shadow-lg animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
+        <div
+          className={cn(
+            "absolute top-full mt-2 z-50 p-0 bg-white border border-slate-200 rounded-lg shadow-lg animate-in fade-in zoom-in-95 duration-200 overflow-hidden",
+            alignmentClasses[align]
+          )}
+        >
           <DateRange
             ranges={[date]}
             onChange={handleSelect}

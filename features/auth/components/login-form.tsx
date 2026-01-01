@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  ArrowLeft,
-  BookOpen,
-  Building2,
-  ChevronRight,
-  GraduationCap,
-  Mail,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, ChevronRight, Mail } from "lucide-react";
+import { roles as roleData } from "@/features/auth/data/roles";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -49,60 +42,8 @@ export default function LoginForm() {
     }
   };
 
-  const roles = [
-    {
-      id: "pimpinan",
-      title: "Yayasan",
-      subtitle: "Direktur & Pengurus",
-      description:
-        "Akses dashboard eksekutif, laporan keuangan, dan manajemen strategis.",
-      icon: <Building2 className="w-8 h-8" />,
-      color: "bg-indigo-600",
-      hoverColor: "hover:bg-indigo-700",
-      lightColor: "bg-indigo-50",
-      textColor: "text-indigo-600",
-      ringColor: "ring-indigo-200",
-    },
-    {
-      id: "kepala-sekolah",
-      title: "Pimpinan Unit",
-      subtitle: "Kepala Sekolah",
-      description:
-        "Manajemen unit sekolah, supervisi guru, dan laporan akademik.",
-      icon: <GraduationCap className="w-8 h-8" />,
-      color: "bg-blue-600",
-      hoverColor: "hover:bg-blue-700",
-      lightColor: "bg-blue-50",
-      textColor: "text-blue-600",
-      ringColor: "ring-blue-200",
-    },
-    {
-      id: "guru",
-      title: "Guru",
-      subtitle: "Tenaga Pengajar",
-      description:
-        "Input nilai, absensi siswa, e-learning, dan jadwal mengajar.",
-      icon: <BookOpen className="w-8 h-8" />,
-      color: "bg-emerald-600",
-      hoverColor: "hover:bg-emerald-700",
-      lightColor: "bg-emerald-50",
-      textColor: "text-emerald-600",
-      ringColor: "ring-emerald-200",
-    },
-    {
-      id: "siswa",
-      title: "Siswa & Orangtua",
-      subtitle: "Wali Murid",
-      description:
-        "Cek rapot, tagihan SPP, jadwal pelajaran, dan presensi harian.",
-      icon: <Users className="w-8 h-8" />,
-      color: "bg-orange-500",
-      hoverColor: "hover:bg-orange-600",
-      lightColor: "bg-orange-50",
-      textColor: "text-orange-600",
-      ringColor: "ring-orange-200",
-    },
-  ];
+  /* Roles data moved to @/features/auth/data/roles.tsx */
+  const roles = roleData;
   const activeRole = roles.find((r) => r.id === selectedRole);
   return (
     <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] md:h-[600px] mx-3 my-3 md:my-0 md:mx-5">

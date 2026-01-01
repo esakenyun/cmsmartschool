@@ -5,7 +5,7 @@ import {
   Check,
   ExternalLink,
 } from "lucide-react";
-import { AdminStatus, AdminItem } from "./types";
+import { AdminStatus, AdminItem } from "../types/types";
 
 interface StatusCellProps {
   teacherId: string;

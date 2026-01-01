@@ -1,18 +1,35 @@
 "use client";
 
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { Teacher } from "@/lib/data-teacher";
-import { getTeachers } from "@/services/teacher-service";
-import { Download, Printer, Search, Users } from "lucide-react";
+import { getTeachers } from "@/features/teachers/services/teacher-service";
+import { Teacher } from "@/features/teachers/data/data-teacher";
+import { Users, Check, ChevronsUpDown } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import { TeacherCardSkeleton } from "@/components/skeletons/teacher-card-skeleton";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { getTeacherStats } from "@/features/principal/utils/utils";
+import { differenceInDays } from "date-fns";
 
 export default function KepalaSekolahSDM() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(2025, 2, 1), // March 1st, 2025
     endDate: new Date(2025, 2, 31), // March 31st, 2025
@@ -36,9 +53,10 @@ export default function KepalaSekolahSDM() {
     fetchData();
   }, []);
 
-  const filteredTeachers = teachers.filter((teacher) =>
-    teacher.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTeachers = teachers.filter((teacher) => {
+    if (!searchQuery) return true;
+    return teacher.id === searchQuery;
+  });
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -55,31 +73,69 @@ export default function KepalaSekolahSDM() {
               Cari Guru
             </label>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Nama..."
-                className="pl-9 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none w-full md:w-48"
-              />
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    role="combobox"
+                    aria-expanded={open}
+                    className="flex items-center justify-between pl-3 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full md:w-64 bg-white text-left"
+                  >
+                    <span className="truncate">
+                      {searchQuery
+                        ? teachers.find((t) => t.id === searchQuery)?.name
+                        : "Cari Guru..."}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[260px] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Cari guru..." />
+                    <CommandList>
+                      <CommandEmpty>Tidak ditemukan.</CommandEmpty>
+                      <CommandGroup>
+                        <CommandItem
+                          value="Semua Guru"
+                          onSelect={() => {
+                            setSearchQuery("");
+                            setOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              searchQuery === "" ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          Semua Guru
+                        </CommandItem>
+                        {teachers.map((t) => (
+                          <CommandItem
+                            key={t.id}
+                            value={t.name}
+                            onSelect={() => {
+                              setSearchQuery(t.id);
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                searchQuery === t.id
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {t.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
-        </div>
-        <div className="flex gap-2 w-full md:w-auto justify-end">
-          <button className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-            <Printer className="w-4 h-4" />
-            <span className="hidden sm:inline">Cetak</span>
-          </button>
-          <button
-            onClick={() =>
-              toast.success("Mengunduh Laporan Kinerja Guru (PDF)...")
-            }
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Unduh PDF</span>
-          </button>
         </div>
       </div>
 
@@ -89,20 +145,69 @@ export default function KepalaSekolahSDM() {
               <TeacherCardSkeleton key={idx} />
             ))
           : filteredTeachers.map((teacher) => (
-              <TeacherCard key={teacher.id} teacher={teacher} />
+              <TeacherCard
+                key={teacher.id}
+                teacher={teacher}
+                dateRange={dateRange}
+              />
             ))}
       </div>
 
       {!loading && filteredTeachers.length === 0 && (
         <div className="text-center py-12 text-slate-500">
-          Tidak ada guru yang ditemukan dengan nama {searchQuery}
+          Tidak ada guru yang ditemukan.
         </div>
       )}
     </div>
   );
 }
 
-function TeacherCard({ teacher }: { teacher: Teacher }) {
+function TeacherCard({
+  teacher,
+  dateRange,
+}: {
+  teacher: Teacher;
+  dateRange: { startDate: Date; endDate: Date };
+}) {
+  const stats = useMemo(() => {
+    const rawStats = getTeacherStats(
+      teacher.id,
+      dateRange.startDate,
+      dateRange.endDate
+    );
+    const start = new Date(dateRange.startDate);
+    const end = new Date(dateRange.endDate);
+    const daysDiff = Math.max(1, differenceInDays(end, start) + 1);
+
+    // Calculate percentages
+    // Presence: totalLogs / daysDiff * 100 (capped at 100)
+    // NOTE: daysDiff includes weekends, but standard working days are fewer.
+    // For simplicity in this mock, we'll assume daysDiff as denominator or 22 for month
+    // Let's use daysDiff but handle weekend logic if needed. For now, max 100.
+    // For single teacher logic: logs <= daysDiff.
+    // Actually, createDailyStats in utils makes 1 per day. So simple division is fine.
+    const presencePct = Math.min(
+      100,
+      Math.round((rawStats.totalLogs / daysDiff) * 100)
+    );
+
+    // Journal: complete / (complete + incomplete + missing) * 100
+    const totalJournal =
+      rawStats.journalStats.complete +
+      rawStats.journalStats.incomplete +
+      rawStats.journalStats.missing;
+    const journalPct =
+      totalJournal > 0
+        ? Math.round((rawStats.journalStats.complete / totalJournal) * 100)
+        : 0;
+
+    return {
+      presence: presencePct,
+      mutabaah: rawStats.avgMutabaah,
+      journal: journalPct,
+    };
+  }, [teacher.id, dateRange]);
+
   return (
     <Link href={`/dashboard/kepala-sekolah/tendik/${teacher.id}`}>
       <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 group relative overflow-hidden h-full">
@@ -128,17 +233,17 @@ function TeacherCard({ teacher }: { teacher: Teacher }) {
         <div className="space-y-3 relative z-10">
           <ProgressBar
             label="Presensi Kehadiran"
-            value={teacher.stats.presence}
+            value={stats.presence}
             colorClass="bg-blue-500"
           />
           <ProgressBar
             label="Mutabaah Yaumiyah"
-            value={teacher.stats.mutabaah}
+            value={stats.mutabaah}
             colorClass="bg-emerald-500"
           />
           <ProgressBar
             label="Jurnal Kerja"
-            value={teacher.stats.journal}
+            value={stats.journal}
             colorClass="bg-orange-500"
           />
         </div>

@@ -1,10 +1,13 @@
 import { ContentLayout } from "@/components/dashboard-panel/content-layout";
 import ProfilePage from "./client-view";
+import { getUserByRole } from "@/features/auth/services/auth-service";
 
-export default function ProfileKepalaSekolah() {
+export default async function ProfileKepalaSekolah() {
+  const kepsek = await getUserByRole("kepala-sekolah");
+
   return (
     <ContentLayout title="Profile Kepala Sekolah">
-      <ProfilePage />
+      <ProfilePage initialData={kepsek} />
     </ContentLayout>
   );
 }

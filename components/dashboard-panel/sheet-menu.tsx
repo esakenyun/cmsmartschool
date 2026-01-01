@@ -13,51 +13,22 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useRoleSettings } from "@/features/auth/hooks/use-role-settings";
 
 interface SheetMenuProps {
   unit?: string;
 }
 
 export function SheetMenu({ unit }: SheetMenuProps) {
-  const pathname = usePathname();
-  let sidebarBg = "bg-white"; // default
-  let sidebarText = "text-black";
-  let activeColor = "bg-emerald-500 text-white";
-  let activeHoverColor = "hover:bg-emerald-500 hover:text-white";
-  let roleTitle = "Smart School";
-  let dashboardHref = "/dashboard";
-
-  if (pathname.includes("/dashboard/pimpinan")) {
-    sidebarBg = "bg-slate-900";
-    sidebarText = "text-white";
-    activeColor = "bg-indigo-500 text-white";
-    activeHoverColor = "hover:bg-indigo-500 hover:text-white";
-    roleTitle = "Pimpinan";
-    dashboardHref = "/dashboard/pimpinan";
-  } else if (pathname.includes("/dashboard/kepala-sekolah")) {
-    sidebarBg = "bg-blue-900";
-    sidebarText = "text-white";
-    activeColor = "bg-blue-500 text-white";
-    activeHoverColor = "hover:bg-blue-500 hover:text-white";
-    roleTitle = "Kepala Sekolah";
-    dashboardHref = "/dashboard/kepala-sekolah";
-  } else if (pathname.includes("/dashboard/guru")) {
-    sidebarBg = "bg-white";
-    sidebarText = "text-black";
-    activeColor = "bg-emerald-500 text-white";
-    activeHoverColor = "hover:bg-emerald-500 hover:text-white";
-    roleTitle = "Guru";
-    dashboardHref = "/dashboard/guru";
-  } else if (pathname.includes("/dashboard/siswa")) {
-    sidebarBg = "bg-white";
-    sidebarText = "text-black";
-    activeColor = "bg-orange-500 text-white";
-    activeHoverColor = "hover:bg-orange-500 hover:text-white";
-    roleTitle = "Siswa";
-    dashboardHref = "/dashboard/siswa";
-  }
+  const {
+    sidebarBg,
+    sidebarText,
+    activeColor,
+    activeHoverColor,
+    roleTitle,
+    dashboardHref,
+  } = useRoleSettings();
 
   return (
     <Sheet>

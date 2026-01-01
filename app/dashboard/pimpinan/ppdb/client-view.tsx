@@ -4,6 +4,7 @@ import { TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { StatCardSkeleton } from "@/components/skeletons/card-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PrincipalHeader } from "@/features/leader/components/leader-header";
 
 const aggregate = {
   totalRegistered: 850,
@@ -62,6 +63,7 @@ export default function PimpinanPPDBContent() {
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <PrincipalHeader />
       <div className="bg-linear-to-r from-blue-600 to-indigo-700 rounded-xl p-8 text-white mb-6 relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-2xl font-bold mb-2">

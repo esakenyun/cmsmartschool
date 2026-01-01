@@ -1,27 +1,32 @@
 "use client";
 
-import { Edit3, Save, Upload, User, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { getUserByRole, updateUser } from "@/services/user-service";
+import { Edit3, Save, Upload, User, Loader2, Plus } from "lucide-react";
+import { useState } from "react";
+import { updateUser } from "@/features/auth/services/auth-service";
+import { UserData } from "@/features/auth/types/types";
 import Image from "next/image";
 import { toast } from "sonner";
 import { ProfileSkeleton } from "@/components/skeletons/profile-skeleton";
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  initialData?: UserData;
+}
+
+export default function ProfilePage({ initialData }: ProfilePageProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [profile, setProfile] = useState({
-    id: "",
-    name: "",
-    nip: "",
-    tmt: "",
-    ttl: "",
-    address: "",
-    position: "",
-    email: "",
-    phone: "",
-    imageUrl: "",
+    id: initialData?.id || "",
+    name: initialData?.name || "",
+    nip: initialData?.nip || "",
+    tmt: initialData?.tmt || "",
+    ttl: initialData?.ttl || "",
+    address: initialData?.address || "",
+    position: initialData?.jabatan || "",
+    email: initialData?.email || "",
+    phone: initialData?.numberhandphone || "",
+    imageUrl: initialData?.imageUrl || "",
   });
 
   // Helper to format date string to "DD MMMM YYYY" or keep as is if not valid date
@@ -49,35 +54,6 @@ export default function ProfilePage() {
       return "";
     }
   };
-
-  useEffect(() => {
-    const initProfile = async () => {
-      try {
-        const kepsek = await getUserByRole("kepala-sekolah");
-
-        if (kepsek) {
-          setProfile({
-            id: kepsek.id,
-            name: kepsek.name,
-            nip: kepsek.nip,
-            tmt: kepsek.tmt,
-            ttl: kepsek.ttl,
-            address: kepsek.address,
-            position: kepsek.jabatan,
-            email: kepsek.email,
-            phone: kepsek.numberhandphone,
-            imageUrl: kepsek.imageUrl,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initProfile();
-  }, []);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -264,6 +240,85 @@ export default function ProfilePage() {
                 </p>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-bold text-slate-800">
+                Riwayat Pelatihan
+              </h2>
+              <p className="text-sm text-slate-500">
+                Daftar pelatihan dan workshop yang telah diikuti
+              </p>
+            </div>
+
+            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
+              <Plus className="w-4 h-4" />
+              Tambah Pelatihan
+            </button>
+          </div>
+
+          <div className="mt-10 overflow-x-auto">
+            <table className="w-full border border-slate-200 rounded-lg overflow-hidden">
+              <thead className="bg-slate-100">
+                <tr className="text-left text-sm font-semibold text-slate-600">
+                  <th className="px-4 py-3">Nama Pelatihan</th>
+                  <th className="px-4 py-3">Tanggal</th>
+                  <th className="px-4 py-3">Penyelenggara</th>
+                  <th className="px-4 py-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-200 text-sm">
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Workshop Kurikulum Merdeka
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-12-19</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Dinas Pendidikan Kota
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Pelatihan Media Pembelajaran Digital
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-10-05</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Balai Guru Penggerak
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+
+                <tr className="hover:bg-slate-50 transition">
+                  <td className="px-4 py-3 font-medium text-slate-700">
+                    Seminar Penguatan Profil Pelajar Pancasila
+                  </td>
+                  <td className="px-4 py-3 text-slate-600">2024-08-21</td>
+                  <td className="px-4 py-3 text-slate-600">
+                    Kementerian Pendidikan
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                      Lihat
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -140,6 +140,9 @@ export default function AdministrasiGuruContent() {
 
       <div className="grid grid-cols-1 gap-6">
         {/* Kolom 1: Perencanaan */}
+        <p className="text-xs md:text-sm text-slate-500">
+          Update Perencanaan terakhir: Senin, 19 Des 2024 - 08:00 WIB
+        </p>
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
             <div className="flex items-center gap-2">
@@ -188,6 +191,10 @@ export default function AdministrasiGuruContent() {
                         </span>
                       )}
                     </div>
+                    <div className="flex flex-col text-xs">
+                      <label htmlFor="">Hybrid Learning</label>
+                      <input type="checkbox" />
+                    </div>
                     {item.link && (
                       <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
                     )}
@@ -205,6 +212,9 @@ export default function AdministrasiGuruContent() {
         </div>
 
         {/* Kolom 3: Evaluasi */}
+        <p className="text-xs md:text-sm text-slate-500">
+          Update Evaluasi terakhir: Senin, 19 Des 2024 - 08:00 WIB
+        </p>
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between gap-2 mb-4 border-b border-slate-100 pb-3">
             <div className="flex items-center gap-2">

@@ -20,12 +20,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   TeacherAdminData,
   AdminStatus,
-} from "@/components/dashboard/kepala-sekolah/kurikulum/types";
-import { INITIAL_DATA } from "@/components/dashboard/kepala-sekolah/kurikulum/data";
+} from "@/features/principal/types/types";
+import { INITIAL_DATA } from "@/features/principal/data/data";
 
 // Imported components
-import { AdminTable } from "@/components/dashboard/kepala-sekolah/kurikulum/admin-table";
-import { StatsChart } from "@/components/dashboard/kepala-sekolah/kurikulum/stats-chart";
+import { AdminTable } from "@/features/principal/tables/admin-table";
+import { StatsChart } from "@/features/principal/components/kurikulum/stats-chart";
 
 export default function KepalaSekolahKurikulum() {
   const [data, setData] = useState<TeacherAdminData[]>(INITIAL_DATA);

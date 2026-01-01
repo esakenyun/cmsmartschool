@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import { AdminStatus, AdminItem } from "./types";
+import { AdminStatus, AdminItem } from "../types/types";
 import { StatusCell } from "./status-cell";
 
 // Interface for the flattened item passed to the table

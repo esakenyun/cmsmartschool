@@ -22,7 +22,8 @@ export default function MataPelajaranGuruContent() {
           <CardSkeleton />
           <CardSkeleton />
         </div>
-        <Skeleton className="h-64 w-full rounded-xl" />
+        <Skeleton className="h-48 w-full rounded-xl" />
+        <Skeleton className="h-5 w-52" />
         <TableSkeleton />
       </div>
     );
@@ -116,7 +117,10 @@ export default function MataPelajaranGuruContent() {
           ))}
         </div>
       </div>
-      <div className="mt-10 p-6 bg-white shadow-sm rounded-xl">
+      <p className="pt-5 text-sm text-slate-500">
+        Update terakhir: Senin, 19 Des 2024 - 08:00 WIB
+      </p>
+      <div className="p-6 bg-white shadow-sm rounded-xl">
         <div className="flex justify-between items-center">
           <h4 className="font-bold text-slate-800 mb-4">
             Playlist Hybrid Learning

@@ -7,10 +7,24 @@ import {
   format,
 } from "date-fns";
 import { id } from "date-fns/locale";
+import {
+  tendikAttendanceData,
+  tendikMutabaahData,
+  tendikJournalData,
+} from "@/features/teachers/data/tendik-dummy-detail";
 
 export const COLORS = ["#10b981", "#f59e0b", "#ef4444"]; // Green, Amber, Red
 
-// Helper to generate consistent random stats based on inputs
+// Helper to parse DD/MM/YYYY
+const parseDate = (dateStr: string) => {
+  const parts = dateStr.split("/");
+  return new Date(
+    parseInt(parts[2]),
+    parseInt(parts[1]) - 1,
+    parseInt(parts[0])
+  );
+};
+
 export const getTeacherStats = (
   teacherId: string,
   startDate: Date | string,
@@ -19,72 +33,58 @@ export const getTeacherStats = (
   const start = new Date(startDate);
   const end = new Date(endDate);
 
-  // Hash seed calculation
-  const inputString = teacherId + start.toISOString() + end.toISOString();
-  let hash = 0;
-  for (let i = 0; i < inputString.length; i++) {
-    const char = inputString.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-  const seed = Math.abs(hash);
-
+  // 1. Filter Data
   const isAll = teacherId === "all";
-  // If single teacher: max 1 attendance per day. If all: approx 8 teachers per day (from dummy data size)
-  const dailyAttendanceCount = isAll ? 8 : 1;
 
-  // Determine trend data based on range
-  const daysDiff = differenceInDays(end, start) + 1; // Inclusive days
-  let trendData = [];
+  const attendance = tendikAttendanceData.filter((d) => {
+    const date = parseDate(d.tanggal);
+    const inRange = date >= start && date <= end;
+    const matchId = isAll || d.id === teacherId;
+    return inRange && matchId;
+  });
 
-  const createDailyStats = (seedBase: number, label: string) => {
-    // Randomize lateness
-    // For single teacher: either 0 or 1 late, never part-late part-ontime
-    let onTime = 0;
-    let late = 0;
+  const mutabaah = tendikMutabaahData.filter((d) => {
+    const date = parseDate(d.tanggal);
+    const inRange = date >= start && date <= end;
+    const matchId = isAll || d.id === teacherId;
+    return inRange && matchId;
+  });
 
-    if (isAll) {
-      // Aggregate: simpler randomization
-      const lateCount = Math.floor(
-        (seedBase % 3) + (seedBase % 10 > 7 ? 1 : 0)
-      );
-      late = Math.min(dailyAttendanceCount, lateCount);
-      onTime = dailyAttendanceCount - late;
-    } else {
-      // Single Teacher: Binary state (0 or 1)
-      const isLate = seedBase % 100 < 15; // 15% chance of being late
-      // Also slight chance of being absent (not logged)? Assuming always present for now or high presence
-      const isAbsent = seedBase % 100 > 95; // 5% absent
+  const journal = tendikJournalData.filter((d) => {
+    const date = parseDate(d.tanggal);
+    const inRange = date >= start && date <= end;
+    const matchId = isAll || d.id === teacherId;
+    return inRange && matchId;
+  });
 
-      if (!isAbsent) {
-        if (isLate) {
-          late = 1;
-          onTime = 0;
-        } else {
-          late = 0;
-          onTime = 1;
-        }
-      }
-    }
+  // 2. Calculate Attendance Stats
+  const totalOnTime = attendance.filter((d) =>
+    d.reportKehadiran.includes("TEPAT")
+  ).length;
+  const totalLate = attendance.filter(
+    (d) => !d.reportKehadiran.includes("TEPAT")
+  ).length;
+  const totalLogs = totalOnTime + totalLate;
 
-    return {
-      date: label,
-      onTime,
-      late,
-    };
-  };
-
-  // Adjust logic for interval
-  // Note: daysDiff calculation above is simple diff, but we need to handle the specific logic loops
-
+  // 3. Calculate Trend Data
   const diffDays = differenceInDays(end, start);
+  let trendData = [];
 
   if (diffDays <= 7) {
     // Daily View
     const days = eachDayOfInterval({ start, end });
-    trendData = days.map((day, i) => {
-      const daySeed = seed + i * 123;
-      return createDailyStats(daySeed, format(day, "EEEE", { locale: id }));
+    trendData = days.map((day) => {
+      const dayStr = format(day, "dd/MM/yyyy");
+      const dayData = attendance.filter((d) => d.tanggal === dayStr);
+      const onTime = dayData.filter((d) =>
+        d.reportKehadiran.includes("TEPAT")
+      ).length;
+      const late = dayData.length - onTime;
+      return {
+        date: format(day, "EEEE", { locale: id }),
+        onTime,
+        late,
+      };
     });
   } else if (diffDays <= 35) {
     // Weekly View
@@ -92,91 +92,143 @@ export const getTeacherStats = (
       { start, end },
       { locale: id, weekStartsOn: 1 }
     );
-    trendData = weeks.map((week, i) => {
-      const weekSeed = seed + i * 456;
-      // For weekly/monthly view, we sum up simulated daily stats
-      // Simulating approximation: 5 working days/week
-      const workingDays = 5;
-      let wOnTime = 0;
-      let wLate = 0;
+    trendData = weeks.map((weekStart, i) => {
+      // rough approximation: filter data belonging to this week
+      // proper way: iterate attendance and check if in week interval
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
 
-      for (let d = 0; d < workingDays; d++) {
-        const dStat = createDailyStats(weekSeed + d, "");
-        wOnTime += dStat.onTime;
-        wLate += dStat.late;
-      }
+      const weekData = attendance.filter((d) => {
+        const dDate = parseDate(d.tanggal);
+        return dDate >= weekStart && dDate <= weekEnd;
+      });
+
+      const onTime = weekData.filter((d) =>
+        d.reportKehadiran.includes("TEPAT")
+      ).length;
+      const late = weekData.length - onTime;
 
       return {
         date: `Minggu ${i + 1}`,
-        onTime: wOnTime,
-        late: wLate,
+        onTime,
+        late,
       };
     });
   } else {
     // Monthly View
     const months = eachMonthOfInterval({ start, end });
-    trendData = months.map((month, i) => {
-      const monthSeed = seed + i * 789;
-      // Approx 20 working days
-      const workingDays = 20;
-      let mOnTime = 0;
-      let mLate = 0;
+    trendData = months.map((monthStart) => {
+      const monthStr = format(monthStart, "MMMM", { locale: id });
+      // Filter by month name from string since data has 'bulan' field
+      // Or parse date. Let's use date parsing for accuracy.
+      const monthData = attendance.filter((d) => {
+        const dDate = parseDate(d.tanggal);
+        return (
+          dDate.getMonth() === monthStart.getMonth() &&
+          dDate.getFullYear() === monthStart.getFullYear()
+        );
+      });
 
-      for (let d = 0; d < workingDays; d++) {
-        const dStat = createDailyStats(monthSeed + d, "");
-        mOnTime += dStat.onTime;
-        mLate += dStat.late;
-      }
+      const onTime = monthData.filter((d) =>
+        d.reportKehadiran.includes("TEPAT")
+      ).length;
+      const late = monthData.length - onTime;
 
       return {
-        date: format(month, "MMMM", { locale: id }),
-        onTime: mOnTime,
-        late: mLate,
+        date: monthStr,
+        onTime,
+        late,
       };
     });
   }
 
-  // Recalculate totals based on trendData
-  const totalOnTime = trendData.reduce((acc, curr) => acc + curr.onTime, 0);
-  const totalLate = trendData.reduce((acc, curr) => acc + curr.late, 0);
-  const totalLogs = totalOnTime + totalLate;
+  // 4. Calculate Journal Stats
+  // Logic: Complete = all sessions filled? Or just count entries?
+  // Previous logic was randomized. Let's define "Complete" as having content in all 5 sessions.
+  // "Incomplete" as having some empty sessions.
+  // "Missing" is tricky without a schedule. Let's assume (Total Attendance) * (Classes per day) - (Logged Journals) = Missing?
+  // For simplicity:
+  // Complete = Entry exists and kehdairan == "HADIR"
+  // Incomplete = Entry exists but other status? or some sessions "-"
+  // Missing = (Total Logs) - (Total Journal Entries) [Approximation] or just 0 for now.
 
-  // Jurnal Stats - Decoupled from Attendance (TotalLogs)
-  // Assume ~4 classes per day per teacher
-  const classesPerDay = isAll ? 32 : 4; // 8 teachers * 4 classes
-  // Total Days covered by valid trend data points (approximation)
-  // Actually we should estimate total working days in range
-  let estimatedWorkingDays = 0;
-  if (diffDays <= 7) estimatedWorkingDays = trendData.length;
-  else if (diffDays <= 35) estimatedWorkingDays = trendData.length * 5;
-  else estimatedWorkingDays = trendData.length * 20;
+  let complete = 0;
+  let incomplete = 0;
 
-  const totalJournals = estimatedWorkingDays * classesPerDay;
+  journal.forEach((j) => {
+    // Check if all sessions 1-5 have content (not "-")
+    const sessions = [j.sesi1, j.sesi2, j.sesi3, j.sesi4, j.sesi5];
+    const filled = sessions.filter((s) => s && s !== "-" && s !== "0").length;
 
-  const completeRate = 0.7 + (seed % 20) / 100;
-  const complete = Math.floor(totalJournals * completeRate);
-  const incomplete = Math.floor(totalJournals * ((1 - completeRate) / 2));
-  const missing = Math.max(0, totalJournals - complete - incomplete);
+    if (filled === 5) complete++;
+    else incomplete++;
+  });
 
-  const mutabaahVariance = seed % 15; // Keep this from original for consistency
-  const avgMutabaah = Math.min(100, Math.max(60, 85 + mutabaahVariance - 7));
+  const missing = 5; // Static low number or 0, since we generate journal for most present days
+
+  // 5. Calculate Mutabaah Stats
+  // Avg Mutabaah: (Sum of (Performed Activities / Total Targets) for each log) / Total Logs * 100
+  // Approximation: calculate key activities %
+  let totalScore = 0;
+  mutabaah.forEach((m) => {
+    let score = 0;
+    // Simple scoring: 5 Salats (5pts), Duha(1), Tilawah(1), Shaum(1), Sedekah(1) = 9 pts max/day
+    const prayers = [
+      m.shalatSubuh,
+      m.shalatDzuhur,
+      m.shalatAshar,
+      m.shalatMaghrib,
+      m.shalatIsya,
+    ];
+    const prayerScore = prayers.filter(
+      (p) => p && p !== "0" && p !== "-" && !p.includes("TIDAK")
+    ).length; // Assuming "TIDAK" means missed? Data says "JAMAAH..." which is good.
+    // Actually data says "JAMAAH AWAL WAKTU..."
+
+    score += prayerScore;
+    if (m.shalatDhuha === "YA") score++;
+    if (parseInt(m.tilawah) > 0) score++;
+    if (m.shaum === "YA") score++;
+    if (m.sedekah === "YA") score++;
+
+    totalScore += (score / 9) * 100;
+  });
+
+  const avgMutabaah =
+    mutabaah.length > 0 ? Math.round(totalScore / mutabaah.length) : 0;
+
+  // Mutabaah Activities Counts
+  let shalatWajibCount = 0;
+  let duhaCount = 0;
+  let infaqCount = 0; // Sedekah
+
+  mutabaah.forEach((m) => {
+    const prayers = [
+      m.shalatSubuh,
+      m.shalatDzuhur,
+      m.shalatAshar,
+      m.shalatMaghrib,
+      m.shalatIsya,
+    ];
+    const allPrayers = prayers.every((p) => p && p !== "0" && p !== "-");
+    if (allPrayers) shalatWajibCount++;
+
+    if (m.shalatDhuha === "YA") duhaCount++;
+    if (m.sedekah === "YA") infaqCount++;
+  });
 
   const mutabaahActivities = [
     {
-      name: "Sholat Wajib",
-      value: Math.floor((totalLogs * 0.9 + (seed % 50)) * (isAll ? 1 : 5)), // Multiply for single teacher to look nice? No, stick to scale
+      name: "Shalat Wajib",
+      value: shalatWajibCount,
     },
     {
-      name: "Sholat Duha",
-      value: Math.floor(
-        (totalLogs * 0.7 + ((seed * 2) % 50)) * (isAll ? 1 : 5)
-      ),
+      name: "Shalat Duha",
+      value: duhaCount,
     },
     {
       name: "Infaq",
-      value: Math.floor(
-        (totalLogs * 0.4 + ((seed * 4) % 50)) * (isAll ? 1 : 5)
-      ),
+      value: infaqCount,
     },
   ];
 

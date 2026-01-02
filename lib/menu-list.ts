@@ -6,6 +6,8 @@ import {
   User,
   FileText,
   BarChart,
+  ScrollText,
+  Layers,
 } from "lucide-react";
 
 type Submenu = {
@@ -66,11 +68,16 @@ export function getMenuList(pathname: string): Group[] {
           //   label: "Manajemen Asset",
           //   icon: Building2,
           // },
-          // {
-          //   href: "/dashboard/pimpinan/ppdb",
-          //   label: "Monitoring PPDB",
-          //   icon: ScrollText,
-          // },
+          {
+            href: "/dashboard/pimpinan/ppdb",
+            label: "Monitoring PPDB",
+            icon: ScrollText,
+          },
+          {
+            href: "/dashboard/pimpinan/hybrid-learning",
+            label: "Hybrid Learning",
+            icon: Layers,
+          },
         ],
       },
     ];

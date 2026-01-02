@@ -89,7 +89,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="h-32 bg-blue-600 relative">
+        <div className="h-32 bg-principal-600 relative">
           <div className="absolute -bottom-16 left-8">
             <div className="w-32 h-32 rounded-full border-4 border-white bg-slate-200 flex items-center justify-center overflow-hidden relative">
               {profile.imageUrl ? (
@@ -117,12 +117,14 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
               <h2 className="text-2xl font-bold text-slate-800">
                 {profile.name}
               </h2>
-              <p className="text-blue-600 font-medium">{profile.position}</p>
+              <p className="text-principal-600 font-medium">
+                {profile.position}
+              </p>
               <div className="flex gap-2 mt-2">
                 <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">
                   NIP/NIY: {profile.nip}
                 </span>
-                <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                <span className="text-xs bg-principal-50 text-principal-700 px-2 py-1 rounded">
                   Aktif
                 </span>
               </div>
@@ -138,7 +140,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
               disabled={isSaving}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 isEditing
-                  ? "bg-blue-600 text-white disabled:bg-blue-400"
+                  ? "bg-principal-600 text-white disabled:bg-principal-400"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
@@ -171,7 +173,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                   onChange={(e) =>
                     setProfile({ ...profile, ttl: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-principal-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -190,7 +192,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                   onChange={(e) =>
                     setProfile({ ...profile, tmt: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-principal-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -208,7 +210,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                   onChange={(e) =>
                     setProfile({ ...profile, address: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-principal-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -232,7 +234,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                   onChange={(e) =>
                     setProfile({ ...profile, phone: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-principal-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -255,7 +257,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
               </p>
             </div>
 
-            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
+            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-principal-500 hover:bg-principal-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
               <Plus className="w-4 h-4" />
               Tambah Pelatihan
             </button>
@@ -282,7 +284,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                     Dinas Pendidikan Kota
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-principal-500 hover:bg-principal-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>
@@ -297,7 +299,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                     Balai Guru Penggerak
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-principal-500 hover:bg-principal-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>
@@ -312,7 +314,7 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
                     Kementerian Pendidikan
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-principal-500 hover:bg-principal-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>

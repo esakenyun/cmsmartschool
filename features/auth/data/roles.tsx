@@ -1,4 +1,4 @@
-import { BookOpen, Building2, GraduationCap } from "lucide-react";
+import { BookOpen, Building2, GraduationCap, Users } from "lucide-react";
 import React from "react";
 
 export interface RoleData {
@@ -21,11 +21,11 @@ export const roles: RoleData[] = [
     subtitle: "Direktur & Pengurus",
     description: "Dashboard eksekutif dan monitoring kinerja unit.",
     icon: <Building2 className="w-8 h-8" />,
-    color: "bg-indigo-600",
-    hoverColor: "hover:bg-indigo-700",
-    lightColor: "bg-indigo-50",
-    textColor: "text-indigo-600",
-    ringColor: "ring-indigo-200",
+    color: "bg-leader-600",
+    hoverColor: "hover:bg-leader-700",
+    lightColor: "bg-leader-50",
+    textColor: "text-leader-600",
+    ringColor: "ring-leader-200",
   },
   {
     id: "kepala-sekolah",
@@ -34,11 +34,11 @@ export const roles: RoleData[] = [
     description:
       "Manajemen unit sekolah, supervisi guru, dan laporan akademik.",
     icon: <GraduationCap className="w-8 h-8" />,
-    color: "bg-blue-600",
-    hoverColor: "hover:bg-blue-700",
-    lightColor: "bg-blue-50",
-    textColor: "text-blue-600",
-    ringColor: "ring-blue-200",
+    color: "bg-principal-600",
+    hoverColor: "hover:bg-principal-700",
+    lightColor: "bg-principal-50",
+    textColor: "text-principal-600",
+    ringColor: "ring-principal-200",
   },
   {
     id: "guru",
@@ -46,23 +46,23 @@ export const roles: RoleData[] = [
     subtitle: "Tenaga Pengajar",
     description: "Administrasi kurikulum dan pemantauan kinerja pembelajaran.",
     icon: <BookOpen className="w-8 h-8" />,
-    color: "bg-emerald-600",
-    hoverColor: "hover:bg-emerald-700",
-    lightColor: "bg-emerald-50",
-    textColor: "text-emerald-600",
-    ringColor: "ring-emerald-200",
+    color: "bg-teacher-600",
+    hoverColor: "hover:bg-teacher-700",
+    lightColor: "bg-teacher-50",
+    textColor: "text-teacher-600",
+    ringColor: "ring-teacher-200",
   },
-  // {
-  //   id: "siswa",
-  //   title: "Siswa & Orangtua",
-  //   subtitle: "Wali Murid",
-  //   description:
-  //     "Cek rapot, tagihan SPP, jadwal pelajaran, dan presensi harian.",
-  //   icon: <Users className="w-8 h-8" />,
-  //   color: "bg-orange-500",
-  //   hoverColor: "hover:bg-orange-600",
-  //   lightColor: "bg-orange-50",
-  //   textColor: "text-orange-600",
-  //   ringColor: "ring-orange-200",
-  // },
+  {
+    id: "siswa",
+    title: "Siswa & Orangtua",
+    subtitle: "Wali Murid",
+    description:
+      "Cek rapot, tagihan SPP, jadwal pelajaran, dan presensi harian.",
+    icon: <Users className="w-8 h-8" />,
+    color: "bg-student-500",
+    hoverColor: "hover:bg-student-600",
+    lightColor: "bg-student-50",
+    textColor: "text-student-600",
+    ringColor: "ring-student-200",
+  },
 ];

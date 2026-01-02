@@ -275,7 +275,6 @@ export default function DashboardPimpinanContent() {
           </div>
         </div>
       </div>
-
       {/* Chart Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">

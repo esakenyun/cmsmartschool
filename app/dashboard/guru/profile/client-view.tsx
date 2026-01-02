@@ -92,7 +92,7 @@ export default function ProfileGuruContent({
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="h-32 bg-emerald-600 relative">
+        <div className="h-32 bg-teacher-600 relative">
           <div className="absolute -bottom-16 left-8">
             <div className="w-32 h-32 rounded-full border-4 border-white bg-slate-200 flex items-center justify-center overflow-hidden relative">
               {profile.imageUrl ? (
@@ -120,12 +120,12 @@ export default function ProfileGuruContent({
               <h2 className="text-2xl font-bold text-slate-800">
                 {profile.name}
               </h2>
-              <p className="text-emerald-600 font-medium">{profile.position}</p>
+              <p className="text-teacher-600 font-medium">{profile.position}</p>
               <div className="flex gap-2 mt-2">
                 <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">
                   NIP/NIY: {profile.nip}
                 </span>
-                <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded">
+                <span className="text-xs bg-teacher-50 text-teacher-700 px-2 py-1 rounded">
                   Aktif
                 </span>
               </div>
@@ -133,23 +133,23 @@ export default function ProfileGuruContent({
             <div className="flex flex-col md:flex-row gap-2 text-xs md:text-sm">
               <div className="relative inline-flex items-center">
                 {/* Prefix */}
-                <span className="absolute left-3 text-xs font-bold text-emerald-600 uppercase pointer-events-none">
+                <span className="absolute left-3 text-xs font-bold text-teacher-600 uppercase pointer-events-none">
                   TA:
                 </span>
 
                 <select
-                  className="appearance-none bg-emerald-50 border border-emerald-100
-      text-emerald-700 font-bold text-sm rounded-lg
+                  className="appearance-none bg-teacher-50 border border-teacher-100
+      text-teacher-700 font-bold text-sm rounded-lg
       py-1.5 pl-12 pr-8 cursor-pointer
-      hover:bg-emerald-100 focus:outline-none
-      focus:ring-2 focus:ring-emerald-500 transition-colors"
+      hover:bg-teacher-100 focus:outline-none
+      focus:ring-2 focus:ring-teacher-500 transition-colors"
                 >
                   <option value="2024 / 2025">2024 / 2025</option>
                   <option value="2025 / 2026">2025 / 2026</option>
                   <option value="2026 / 2027">2026 / 2027</option>
                 </select>
 
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 pointer-events-none" />
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-teacher-600 pointer-events-none" />
               </div>
 
               <button
@@ -163,7 +163,7 @@ export default function ProfileGuruContent({
                 disabled={isSaving}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isEditing
-                    ? "bg-emerald-600 text-white disabled:bg-emerald-400"
+                    ? "bg-teacher-600 text-white disabled:bg-teacher-400"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                 }`}
               >
@@ -197,7 +197,7 @@ export default function ProfileGuruContent({
                   onChange={(e) =>
                     setProfile({ ...profile, ttl: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-teacher-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -216,7 +216,7 @@ export default function ProfileGuruContent({
                   onChange={(e) =>
                     setProfile({ ...profile, tmt: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-teacher-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -234,7 +234,7 @@ export default function ProfileGuruContent({
                   onChange={(e) =>
                     setProfile({ ...profile, address: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-teacher-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -258,7 +258,7 @@ export default function ProfileGuruContent({
                   onChange={(e) =>
                     setProfile({ ...profile, phone: e.target.value })
                   }
-                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full border border-slate-300 rounded p-2 text-sm focus:ring-2 focus:ring-teacher-500 outline-none"
                 />
               ) : (
                 <p className="text-slate-800 border-b border-transparent py-2">
@@ -281,7 +281,7 @@ export default function ProfileGuruContent({
               </p>
             </div>
 
-            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
+            <button className="flex justify-center items-center gap-1.5 px-3 py-2 bg-teacher-500 hover:bg-teacher-600 text-white rounded-lg text-sm font-semibold transition w-7/12 md:w-fit">
               <Plus className="w-4 h-4" />
               Tambah Pelatihan
             </button>
@@ -308,7 +308,7 @@ export default function ProfileGuruContent({
                     Dinas Pendidikan Kota
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-teacher-500 hover:bg-teacher-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>
@@ -323,7 +323,7 @@ export default function ProfileGuruContent({
                     Balai Guru Penggerak
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-teacher-500 hover:bg-teacher-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>
@@ -338,7 +338,7 @@ export default function ProfileGuruContent({
                     Kementerian Pendidikan
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <button className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md text-xs font-semibold transition">
+                    <button className="px-3 py-1.5 bg-teacher-500 hover:bg-teacher-600 text-white rounded-md text-xs font-semibold transition">
                       Lihat
                     </button>
                   </td>

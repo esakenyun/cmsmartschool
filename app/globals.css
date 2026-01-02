@@ -44,8 +44,59 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Screen Size For Md*/
   --breakpoint-tablet-landscape-min: 1024px;
   --breakpoint-tablet-landscape-max: 1100px;
+
+  /* Color Pallette */
+  --color-leader-50: var(--leader-50);
+  --color-leader-100: var(--leader-100);
+  --color-leader-200: var(--leader-200);
+  --color-leader-300: var(--leader-300);
+  --color-leader-400: var(--leader-400);
+  --color-leader-500: var(--leader-500);
+  --color-leader-600: var(--leader-600);
+  --color-leader-700: var(--leader-700);
+  --color-leader-800: var(--leader-800);
+  --color-leader-900: var(--leader-900);
+  --color-leader-950: var(--leader-950);
+
+  --color-principal-50: var(--principal-50);
+  --color-principal-100: var(--principal-100);
+  --color-principal-200: var(--principal-200);
+  --color-principal-300: var(--principal-300);
+  --color-principal-400: var(--principal-400);
+  --color-principal-500: var(--principal-500);
+  --color-principal-600: var(--principal-600);
+  --color-principal-700: var(--principal-700);
+  --color-principal-800: var(--principal-800);
+  --color-principal-900: var(--principal-900);
+  --color-principal-950: var(--principal-950);
+
+  --color-teacher-50: var(--teacher-50);
+  --color-teacher-100: var(--teacher-100);
+  --color-teacher-200: var(--teacher-200);
+  --color-teacher-300: var(--teacher-300);
+  --color-teacher-400: var(--teacher-400);
+  --color-teacher-500: var(--teacher-500);
+  --color-teacher-600: var(--teacher-600);
+  --color-teacher-700: var(--teacher-700);
+  --color-teacher-800: var(--teacher-800);
+  --color-teacher-900: var(--teacher-900);
+  --color-teacher-950: var(--teacher-950);
+
+  --color-student-50: var(--student-50);
+  --color-student-100: var(--student-100);
+  --color-student-200: var(--student-200);
+  --color-student-300: var(--student-300);
+  --color-student-400: var(--student-400);
+  --color-student-500: var(--student-500);
+  --color-student-600: var(--student-600);
+  --color-student-700: var(--student-700);
+  --color-student-800: var(--student-800);
+  --color-student-900: var(--student-900);
+  --color-student-950: var(--student-950);
 }
 
 :root {
@@ -81,6 +132,60 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Color Pallete */
+
+  /* Pimpinan */
+  --leader-50: #eef2ff;
+  --leader-100: #e0e7ff;
+  --leader-200: #c6d2ff;
+  --leader-300: #a3b3ff;
+  --leader-400: #7c86ff;
+  --leader-500: #615fff;
+  --leader-600: #4f39f6;
+  --leader-700: #432dd7;
+  --leader-800: #372aac;
+  --leader-900: #312c85;
+  --leader-950: #1e1a4d;
+
+  /* Kepala Sekolah */
+  --principal-50: #f2f7fd;
+  --principal-100: #e5edf9;
+  --principal-200: #c4d9f3;
+  --principal-300: #90b9e9;
+  --principal-400: #5596db;
+  --principal-500: #3078c7;
+  --principal-600: #205da9;
+  --principal-700: #1c4d8d;
+  --principal-800: #1a4072;
+  --principal-900: #1b385f;
+  --principal-950: #12233f;
+
+  /* Guru */
+  --teacher-50: #f1faeb;
+  --teacher-100: #e0f3d4;
+  --teacher-200: #c3e8ae;
+  --teacher-300: #9dd77f;
+  --teacher-400: #7ac556;
+  --teacher-500: #62b63c;
+  --teacher-600: #448729;
+  --teacher-700: #366823;
+  --teacher-800: #2e5321;
+  --teacher-900: #2a4720;
+  --teacher-950: #13260d;
+
+  /* Siswa */
+  --student-50: #fff1f1;
+  --student-100: #fee6e5;
+  --student-200: #fdced0;
+  --student-300: #fba6a8;
+  --student-400: #f8747b;
+  --student-500: #f04350;
+  --student-600: #d62037;
+  --student-700: #ba162f;
+  --student-800: #9c152d;
+  --student-900: #86152d;
+  --student-950: #4b0614;
 }
 
 .dark {

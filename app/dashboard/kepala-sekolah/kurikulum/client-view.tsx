@@ -6,7 +6,6 @@ import {
   User,
   Search,
   BookOpen,
-  CalendarDays,
   GraduationCap,
   ChevronDown,
   X,
@@ -37,7 +36,6 @@ export default function KepalaSekolahKurikulum() {
 
   // Pagination states
   const [planningPage, setPlanningPage] = useState(1);
-  const [implementationPage, setImplementationPage] = useState(1);
   const [evaluationPage, setEvaluationPage] = useState(1);
 
   useEffect(() => {
@@ -174,7 +172,6 @@ export default function KepalaSekolahKurikulum() {
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setPlanningPage(1);
-                    setImplementationPage(1);
                     setEvaluationPage(1);
                   }}
                   className="w-full text-sm border border-slate-300 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none"
@@ -193,7 +190,6 @@ export default function KepalaSekolahKurikulum() {
                   onChange={(e) => {
                     setSelectedTeacher(e.target.value);
                     setPlanningPage(1);
-                    setImplementationPage(1);
                     setEvaluationPage(1);
                   }}
                   className="w-full text-sm border border-slate-300 rounded-lg pl-9 pr-3 py-2 appearance-none focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer"
@@ -263,7 +259,7 @@ export default function KepalaSekolahKurikulum() {
         </div>
 
         <AdminTable
-          title="1. Perencanaan Pembelajaran"
+          title="Perencanaan Pembelajaran"
           icon={BookOpen}
           category="planning"
           colorClass="bg-blue-50 text-blue-900 icon-blue"
@@ -276,7 +272,7 @@ export default function KepalaSekolahKurikulum() {
           setPreviewUrl={setPreviewUrl}
         />
 
-        <AdminTable
+        {/* <AdminTable
           title="2. Pelaksanaan Pembelajaran"
           icon={CalendarDays}
           category="implementation"
@@ -288,10 +284,10 @@ export default function KepalaSekolahKurikulum() {
           setOpenDropdownId={setOpenDropdownId}
           handleStatusUpdate={handleStatusUpdate}
           setPreviewUrl={setPreviewUrl}
-        />
+        /> */}
 
         <AdminTable
-          title="3. Evaluasi Pembelajaran"
+          title="Evaluasi Pembelajaran"
           icon={GraduationCap}
           category="evaluation"
           colorClass="bg-purple-50 text-purple-900 icon-purple"

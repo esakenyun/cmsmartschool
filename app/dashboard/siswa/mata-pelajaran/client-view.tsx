@@ -143,14 +143,14 @@ export default function MataPelajaranSiswaContent() {
             </div>
 
             <div className="z-10">
-              <h4 className="font-bold text-slate-800 text-lg leading-tight group-hover:text-orange-600 transition-colors">
+              <h4 className="font-bold text-slate-800 text-lg leading-tight group-hover:text-student-600 transition-colors">
                 {subject.name}
               </h4>
               <p className="text-xs text-slate-500 mt-1">{subject.teacher}</p>
             </div>
 
             <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-              <div className="bg-orange-500 text-white p-1.5 rounded-full shadow-md">
+              <div className="bg-student-500 text-white p-1.5 rounded-full shadow-md">
                 <ChevronRight className="w-4 h-4" />
               </div>
             </div>

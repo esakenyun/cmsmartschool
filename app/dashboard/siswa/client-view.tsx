@@ -84,30 +84,30 @@ export default function DashboardSiswaContent() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Banner Selamat Datang */}
-      <div className="bg-linear-to-r from-orange-500 to-amber-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-linear-to-r from-student-500 to-rose-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-3xl font-bold mb-2">
             Ahlan Wa Sahlan, Ananda! 👋
           </h2>
-          <p className="text-orange-100 max-w-xl">
+          <p className="text-student-100 max-w-xl">
             Semangat belajar hari ini! Jangan lupa cek jadwal pelajaran dan
             tugas terbaru ya.
           </p>
           <div className="mt-6 flex gap-3">
             <Link
               href={"/siswa/mata-pelajaran"}
-              className="bg-white text-orange-600 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-50 transition-colors shadow-sm"
+              className="bg-white text-student-600 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-student-50 transition-colors shadow-sm"
             >
               Buka Kelas Saya
             </Link>
-            <button className="bg-orange-600/50 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors backdrop-blur-sm">
+            <button className="bg-student-600/50 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-student-600 transition-colors backdrop-blur-sm">
               Lihat Jadwal Sholat
             </button>
           </div>
         </div>
         {/* Decorative Circles */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white opacity-10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 right-20 w-32 h-32 bg-yellow-400 opacity-20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-0 right-20 w-32 h-32 bg-pink-400 opacity-20 rounded-full blur-xl"></div>
       </div>
 
       {/* Filter Level & Informasi Rutin */}
@@ -116,7 +116,7 @@ export default function DashboardSiswaContent() {
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-orange-500" />
+              <Bell className="w-5 h-5 text-student-500" />
               Informasi Sekolah
             </h3>
 
@@ -128,8 +128,8 @@ export default function DashboardSiswaContent() {
                   onClick={() => setSelectedLevel(lvl as AnnouncementLevel)}
                   className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${
                     selectedLevel === lvl
-                      ? "bg-orange-500 text-white shadow-md"
-                      : "text-slate-500 hover:text-orange-500"
+                      ? "bg-student-500 text-white shadow-md"
+                      : "text-slate-500 hover:text-student-500"
                   }`}
                 >
                   Level {lvl}
@@ -144,7 +144,7 @@ export default function DashboardSiswaContent() {
                 key={item.id}
                 className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow flex gap-4"
               >
-                <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 bg-orange-50 rounded-lg text-orange-600 border border-orange-100">
+                <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 bg-student-50 rounded-lg text-student-600 border border-student-100">
                   <Calendar className="w-6 h-6 mb-1" />
                 </div>
                 <div>
@@ -179,12 +179,12 @@ export default function DashboardSiswaContent() {
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-orange-500" />
+              <Clock className="w-4 h-4 text-student-500" />
               Agenda Hari Ini
             </h4>
             <ul className="space-y-4 relative border-l-2 border-slate-100 ml-2">
               <li className="ml-6 relative">
-                <div className="absolute -left-[29px] top-1 w-3 h-3 rounded-full bg-orange-500 border-2 border-white"></div>
+                <div className="absolute -left-[29px] top-1 w-3 h-3 rounded-full bg-student-500 border-2 border-white"></div>
                 <p className="text-xs font-bold text-slate-400">
                   07.00 - 07.30
                 </p>

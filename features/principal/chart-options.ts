@@ -208,40 +208,175 @@ export const getDetailMutabaahOption = (achieved: number): EChartsOption => {
   };
 };
 
-export const getDetailJournalOption = (
-  complete: number,
-  incomplete: number,
-  missing: number
-): EChartsOption => {
-  // Map "Lengkap" + "Tidak Lengkap" -> "Terisi" for the simplified view
-  const terisi = complete + incomplete;
-
+export const getDetailJournalOption = (breakdown: {
+  sesi1: number;
+  sesi2: number;
+  sesi3: number;
+  sesi4: number;
+  sesi5: number;
+  tambahan: number;
+}): EChartsOption => {
   return {
     tooltip: { trigger: "item" as const },
     legend: {
       bottom: "0%",
       left: "center",
       icon: "circle",
-      itemGap: 20,
-      textStyle: { color: "#64748b" },
+      itemGap: 10,
+      textStyle: { color: "#64748b", fontSize: 10 },
+      width: "90%",
     },
     series: [
       {
-        name: "Jurnal",
+        name: "Jurnal per Sesi",
         type: "pie" as const,
-        radius: ["65%", "80%"],
+        radius: ["50%", "70%"],
         avoidLabelOverlap: false,
         itemStyle: {
-          borderRadius: 0,
+          borderRadius: 4,
           borderColor: "#fff",
           borderWidth: 2,
         },
         label: { show: false, position: "center" },
-        emphasis: { label: { show: true, fontSize: 16, fontWeight: "bold" } },
+        emphasis: { label: { show: true, fontSize: 14, fontWeight: "bold" } },
         data: [
-          { value: terisi, name: "Terisi", itemStyle: { color: "#3b82f6" } }, // Blue
-          { value: missing, name: "Kosong", itemStyle: { color: "#cbd5e1" } }, // Slate 300
+          {
+            value: breakdown.sesi1,
+            name: "Sesi 1",
+            itemStyle: { color: "#3b82f6" },
+          }, // Blue
+          {
+            value: breakdown.sesi2,
+            name: "Sesi 2",
+            itemStyle: { color: "#10b981" },
+          }, // Emerald
+          {
+            value: breakdown.sesi3,
+            name: "Sesi 3",
+            itemStyle: { color: "#f59e0b" },
+          }, // Amber
+          {
+            value: breakdown.sesi4,
+            name: "Sesi 4",
+            itemStyle: { color: "#8b5cf6" },
+          }, // Violet
+          {
+            value: breakdown.sesi5,
+            name: "Sesi 5",
+            itemStyle: { color: "#ec4899" },
+          }, // Pink
+          {
+            value: breakdown.tambahan,
+            name: "Tambahan",
+            itemStyle: { color: "#6366f1" },
+          }, // Indigo
         ],
+      },
+    ],
+  };
+};
+
+export const getSessionGaugeOption = (
+  filled: number,
+  total: number,
+  color: string,
+  label: string
+): EChartsOption => {
+  const empty = Math.max(0, total - filled);
+  const percentage = total > 0 ? Math.round((filled / total) * 100) : 0;
+
+  return {
+    title: {
+      text: label,
+      left: "center",
+      top: "0%",
+      textStyle: { fontSize: 12, color: "#64748b" },
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["60%", "80%"],
+        center: ["50%", "60%"],
+        avoidLabelOverlap: false,
+        label: {
+          show: true,
+          position: "center",
+          formatter: `{a|${percentage}%}`,
+          rich: {
+            a: {
+              fontSize: 14,
+              fontWeight: "bold",
+              color: "#334155",
+            },
+          },
+        },
+        data: [
+          { value: filled, itemStyle: { color: color } },
+          { value: empty, itemStyle: { color: "#e2e8f0" } },
+        ],
+        animationDuration: 1000,
+      },
+      {
+        type: "pie",
+        radius: ["60%", "80%"],
+        center: ["50%", "60%"],
+        itemStyle: { opacity: 0 },
+        tooltip: {
+          show: true,
+          formatter: `${label}: <br/><b>${filled}/${total}</b> Sesi Terisi`,
+        },
+        data: [{ value: 100 }],
+      },
+    ],
+    tooltip: { trigger: "item" },
+  };
+};
+
+export const getActivityPieOption = (
+  data: { name: string; value: number }[],
+  title: string
+): EChartsOption => {
+  return {
+    title: {
+      text: title,
+      left: "center",
+      textStyle: { fontSize: 14, color: "#334155" },
+      top: "2%",
+    },
+    tooltip: {
+      trigger: "item",
+      formatter: "{b}: {c} ({d}%)",
+    },
+    legend: {
+      type: "scroll",
+      orient: "horizontal",
+      bottom: 0,
+      left: "center",
+      textStyle: { fontSize: 10 },
+    },
+    series: [
+      {
+        name: title,
+        type: "pie",
+        radius: "60%",
+        center: ["50%", "50%"],
+        data: data,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+        label: {
+          show: true,
+          formatter: "{d}%",
+          fontSize: 10,
+        },
+        labelLine: {
+          length: 10,
+          length2: 5,
+        },
       },
     ],
   };

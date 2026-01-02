@@ -11,7 +11,8 @@ export const generateDummyData = (): TeacherAdminData[] => {
     { id: "t5", name: "Pak Dedi", subject: "IPS", class: "8A" },
   ];
 
-  const statuses: AdminStatus[] = ["null", "submitted", "approved"];
+  // const statuses: AdminStatus[] = ["null", "submitted", "approved"];
+  const statuses: AdminStatus[] = ["submitted", "approved"];
 
   return teachers.map((t) => ({
     ...t,

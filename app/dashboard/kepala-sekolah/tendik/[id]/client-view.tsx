@@ -5,142 +5,172 @@ import { Teacher } from "@/features/teachers/data/data-teacher";
 import { Download, Clock, BookOpen, FileText, ArrowLeft } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
+import ReactECharts from "echarts-for-react";
 import {
   getDetailPresensiOption,
-  getDetailMutabaahOption,
-  getDetailJournalOption,
+  getActivityPieOption,
 } from "@/features/principal/chart-options";
 import { DetailCard } from "@/features/principal/components/detail-card";
 import { generateTeacherReportPDF } from "@/features/principal/utils/pdf-generator";
-import { getTeacherStats } from "@/features/principal/utils/utils";
 import Link from "next/link";
-
-// Dummy Data Generators
-const generatePresensiHistory = () => [
-  {
-    date: "2024-03-05",
-    time: "06:55 - 14:00",
-    status: "Hadir",
-    color: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    date: "2024-03-04",
-    time: "06:55 - 14:00",
-    status: "Hadir",
-    color: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    date: "2024-03-03",
-    time: "06:55 - 14:00",
-    status: "Hadir",
-    color: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    date: "2024-03-02",
-    time: "06:55 - 14:00",
-    status: "Sakit",
-    color: "bg-red-100 text-red-700",
-  },
-  {
-    date: "2024-03-01",
-    time: "06:55 - 14:00",
-    status: "Hadir",
-    color: "bg-emerald-100 text-emerald-700",
-  },
-];
-
-const generateMutabaahHistory = () => [
-  {
-    activity: "Shalat Dhuha",
-    status: "Tertelaksana",
-    color: "text-blue-600 bg-blue-50",
-  },
-  {
-    activity: "Tilawah Quran",
-    status: "Tertelaksana",
-    color: "text-blue-600 bg-blue-50",
-  },
-  {
-    activity: "Puasa Sunnah",
-    status: "Tidak",
-    color: "text-slate-500 bg-slate-100",
-  },
-  {
-    activity: "Sedekah",
-    status: "Tertelaksana",
-    color: "text-blue-600 bg-blue-50",
-  },
-  {
-    activity: "Dzikir Pagi",
-    status: "Tertelaksana",
-    color: "text-blue-600 bg-blue-50",
-  },
-];
-
-const generateJournalHistory = () => [
-  {
-    materi: "Mata Pelajaran Utama",
-    sub: "Materi Bahasan Bab 5",
-    status: "Terisi",
-    color: "bg-blue-100 text-blue-700",
-  },
-  {
-    materi: "Mata Pelajaran Utama",
-    sub: "Materi Bahasan Bab 4",
-    status: "Terisi",
-    color: "bg-blue-100 text-blue-700",
-  },
-  {
-    materi: "Mata Pelajaran Utama",
-    sub: "Materi Bahasan Bab 3",
-    status: "Kosong",
-    color: "bg-slate-100 text-slate-700",
-  },
-  {
-    materi: "Mata Pelajaran Utama",
-    sub: "Materi Bahasan Bab 2",
-    status: "Terisi",
-    color: "bg-blue-100 text-blue-700",
-  },
-  {
-    materi: "Mata Pelajaran Utama",
-    sub: "Materi Bahasan Bab 1",
-    status: "Terisi",
-    color: "bg-blue-100 text-blue-700",
-  },
-];
+import { useRouter } from "next/navigation";
+import { TendikDetailData } from "@/features/teachers/schemas/tendik-detail-schema";
+import { format } from "date-fns";
+import { PresensiTable } from "@/features/teachers/tables/presensi-table";
+import { MutabaahTable } from "@/features/teachers/tables/mutabaah-table";
+import { JurnalTable } from "@/features/teachers/tables/jurnal-table";
+import ProgressBar from "@/features/teachers/components/progress-bar";
 
 export default function TendikKepalaSekolahContent({
   guru,
+  initialData,
+  initialDateRange,
 }: {
   guru: Teacher;
+  initialData: TendikDetailData;
+  initialDateRange: { from: Date; to: Date };
 }) {
+  const router = useRouter();
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(2025, 2, 1),
-    endDate: new Date(2025, 2, 31),
+    startDate: initialDateRange.from,
+    endDate: initialDateRange.to,
     key: "selection",
   });
 
-  // Calculate detailed stats using the dynamic generator
-  const stats = useMemo(() => {
-    return getTeacherStats(guru.id, dateRange.startDate, dateRange.endDate);
-  }, [guru.id, dateRange]);
+  // Effect to update URL when dateRange changes
+  const handleDateChange = (newRange: {
+    startDate: Date;
+    endDate: Date;
+    key: string;
+  }) => {
+    setDateRange(newRange);
+    if (newRange.startDate && newRange.endDate) {
+      const from = format(newRange.startDate, "yyyy-MM-dd");
+      const to = format(newRange.endDate, "yyyy-MM-dd");
+      router.push(`?from=${from}&to=${to}`);
+    }
+  };
 
-  // Extract values for charts
-  const presensiOnTime = stats.totalOnTime;
-  const presensiLate = stats.totalLate;
+  // Use data from props directly
+  const detailData = initialData;
 
-  const journalComplete = stats.journalStats.complete;
-  const journalIncomplete = stats.journalStats.incomplete;
-  const journalMissing = stats.journalStats.missing;
+  // Calculate real stats from the filtered detailData
+  const chartStats = useMemo(() => {
+    // 1. Presensi Stats
+    const totalOnTime = detailData.attendance.filter((d) =>
+      d.reportKehadiran.includes("TEPAT")
+    ).length;
+    const totalLate = detailData.attendance.filter(
+      (d) => !d.reportKehadiran.includes("TEPAT")
+    ).length;
+
+    // 2. Mutabaah Stats (Progress Bars Calculation)
+    const mutabaahStats = {
+      shalatWajib: 0,
+      duha: 0,
+      tilawah: 0,
+      shaum: 0,
+      sedekah: 0,
+    };
+
+    detailData.mutabaah.forEach((d) => {
+      // Shalat Wajib: check if all 5 are valid (not "0", "-", null)
+      const prayers = [
+        "shalatSubuh",
+        "shalatDzuhur",
+        "shalatAshar",
+        "shalatMaghrib",
+        "shalatIsya",
+      ] as const;
+
+      const allPrayersDone = prayers.every((p) => {
+        const val = d[p as keyof typeof d];
+        return val && val !== "0" && val !== "-";
+      });
+      if (allPrayersDone) mutabaahStats.shalatWajib++;
+
+      // Duha
+      if (d.shalatDhuha === "YA") mutabaahStats.duha++;
+
+      // Tilawah (pages)
+      const pages = parseInt(d.tilawah);
+      if (!isNaN(pages)) mutabaahStats.tilawah += pages;
+
+      // Shaum
+      if (d.shaum === "YA") mutabaahStats.shaum++;
+
+      // Sedekah
+      if (d.sedekah === "YA") mutabaahStats.sedekah++;
+    });
+
+    // 3. Journal Stats Breakdown
+    const journalBreakdown = {
+      sesi1: {} as Record<string, number>,
+      sesi2: {} as Record<string, number>,
+      sesi3: {} as Record<string, number>,
+      sesi4: {} as Record<string, number>,
+      sesi5: {} as Record<string, number>,
+      tambahan: {} as Record<string, number>,
+    };
+
+    const processSession = (
+      sessionKey: keyof typeof journalBreakdown,
+      value: string
+    ) => {
+      if (!value || value === "-" || value === "0") {
+        const key = "[Kosong]";
+        journalBreakdown[sessionKey][key] =
+          (journalBreakdown[sessionKey][key] || 0) + 1;
+        return;
+      }
+      journalBreakdown[sessionKey][value] =
+        (journalBreakdown[sessionKey][value] || 0) + 1;
+    };
+
+    detailData.journal.forEach((d) => {
+      processSession("sesi1", d.sesi1);
+      processSession("sesi2", d.sesi2);
+      processSession("sesi3", d.sesi3);
+      processSession("sesi4", d.sesi4);
+      processSession("sesi5", d.sesi5);
+      processSession("tambahan", d.tambahan);
+    });
+
+    return {
+      presensi: { onTime: totalOnTime, late: totalLate },
+      mutabaah: mutabaahStats,
+      journal: journalBreakdown,
+    };
+  }, [detailData]);
+
+  const presensiOnTime = chartStats.presensi.onTime;
+  const presensiLate = chartStats.presensi.late;
+
+  // Helper to transform dictionary to array of objects for ECharts
+  const xf = (record: Record<string, number>) =>
+    Object.entries(record).map(([name, value]) => ({ name, value }));
 
   const handleDownloadPDF = () => {
     toast.info("Sedang membuat PDF...");
     try {
       generateTeacherReportPDF(guru, {
-        presensi: generatePresensiHistory(),
-        mutabaah: generateMutabaahHistory(),
-        jurnal: generateJournalHistory(),
+        presensi: detailData.attendance.map((d) => ({
+          date: d.tanggal,
+          time: d.waktu,
+          status: d.reportKehadiran,
+          color: "",
+        })),
+        mutabaah: detailData.mutabaah.map(() => ({
+          activity: "Total Ibadah",
+          status: "Detail di Tabel",
+          color: "",
+        })),
+        jurnal: detailData.journal.map((d) => ({
+          materi: d.sesi1,
+          sub: d.keterangan,
+          status: d.kehadiran,
+          color: "",
+        })),
       });
       toast.success("PDF berhasil diunduh");
     } catch (error) {
@@ -165,7 +195,7 @@ export default function TendikKepalaSekolahContent({
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 items-center">
-          <DateRangePicker date={dateRange} setDate={setDateRange} />
+          <DateRangePicker date={dateRange} setDate={handleDateChange} />
           <button
             onClick={handleDownloadPDF}
             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto justify-center"
@@ -183,109 +213,121 @@ export default function TendikKepalaSekolahContent({
           subtitle="Rekapitulasi Periode Ini"
           icon={<Clock className="w-5 h-5" />}
           chartOption={getDetailPresensiOption(presensiOnTime, presensiLate)}
-          tableTitle="Riwayat Terakhir"
+          tableTitle="Riwayat Presensi"
         >
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead>
-              <tr className="text-slate-500 border-b border-slate-100">
-                <th className="pb-2 font-semibold">TANGGAL</th>
-                <th className="pb-2 font-semibold">JAM MASUK</th>
-                <th className="pb-2 font-semibold text-right">STATUS</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {generatePresensiHistory().map((item, i) => (
-                <tr key={i}>
-                  <td className="py-3 font-medium text-slate-700">
-                    {item.date}
-                  </td>
-                  <td className="py-3 text-slate-500">{item.time}</td>
-                  <td className="py-3 text-right">
-                    <span
-                      className={`inline-block px-2 py-1 rounded text-xs font-semibold ${item.color}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <PresensiTable data={detailData.attendance} />
         </DetailCard>
 
-        {/* Mutabaah Card */}
+        {/* Mutabaah Card - Custom Progress Bars */}
         <DetailCard
           title="Mutabaah Yaumiyah"
           subtitle="Ibadah Harian"
-          icon={<BookOpen className="w-5 h-5 text-violet-600" />} // Use specific color/icon if supported by DetailCard
-          chartOption={getDetailMutabaahOption(stats.avgMutabaah)}
-          tableTitle="Aktivitas Terakhir"
+          icon={<BookOpen className="w-5 h-5 text-violet-600" />}
+          tableTitle="Riwayat Mutabaah"
+          customChartContent={
+            <div className="w-full max-w-lg mx-auto py-4">
+              <ProgressBar
+                label="Shalat Wajib (5 Waktu)"
+                value={chartStats.mutabaah.shalatWajib}
+                target={30}
+                colorClass="bg-violet-600"
+              />
+              <ProgressBar
+                label="Shalat Dhuha"
+                value={chartStats.mutabaah.duha}
+                target={20}
+                colorClass="bg-blue-500"
+              />
+              <ProgressBar
+                label="Tilawah (Lembar)"
+                value={chartStats.mutabaah.tilawah}
+                target={50}
+                colorClass="bg-emerald-500"
+              />
+              <ProgressBar
+                label="Shaum Sunnah"
+                value={chartStats.mutabaah.shaum}
+                target={5}
+                colorClass="bg-amber-500"
+              />
+              <ProgressBar
+                label="Sedekah"
+                value={chartStats.mutabaah.sedekah}
+                target={15}
+                colorClass="bg-pink-500"
+              />
+            </div>
+          }
         >
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead>
-              <tr className="text-slate-500 border-b border-slate-100">
-                <th className="pb-2 font-semibold">AKTIVITAS</th>
-                <th className="pb-2 font-semibold text-right">STATUS</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {generateMutabaahHistory().map((item, i) => (
-                <tr key={i}>
-                  <td className="py-3 font-medium text-slate-700">
-                    {item.activity}
-                  </td>
-                  <td className="py-3 text-right">
-                    <span
-                      className={`inline-block px-2 py-1 rounded text-xs font-semibold ${item.color}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <MutabaahTable data={detailData.mutabaah} />
         </DetailCard>
 
         {/* Jurnal Card */}
         <DetailCard
           title="Jurnal Mengajar"
-          subtitle="Kelengkapan Administrasi"
+          subtitle="Aktivitas per Sesi"
           icon={<FileText className="w-5 h-5 text-blue-600" />}
-          chartOption={getDetailJournalOption(
-            journalComplete,
-            journalIncomplete,
-            journalMissing
-          )}
-          tableTitle="Jurnal Terakhir"
+          tableTitle="Riwayat Jurnal"
+          customChartContent={
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.sesi1),
+                    "Sesi 1"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.sesi2),
+                    "Sesi 2"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.sesi3),
+                    "Sesi 3"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.sesi4),
+                    "Sesi 4"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.sesi5),
+                    "Sesi 5"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+              <div className="h-[250px]">
+                <ReactECharts
+                  option={getActivityPieOption(
+                    xf(chartStats.journal.tambahan),
+                    "Tambahan"
+                  )}
+                  style={{ height: "100%", width: "100%" }}
+                />
+              </div>
+            </div>
+          }
         >
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead>
-              <tr className="text-slate-500 border-b border-slate-100">
-                <th className="pb-2 font-semibold">MATERI</th>
-                <th className="pb-2 font-semibold text-right">STATUS</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {generateJournalHistory().map((item, i) => (
-                <tr key={i}>
-                  <td className="py-3">
-                    <div className="font-medium text-slate-700">
-                      {item.materi}
-                    </div>
-                    <div className="text-xs text-slate-400">{item.sub}</div>
-                  </td>
-                  <td className="py-3 text-right">
-                    <span
-                      className={`inline-block px-2 py-1 rounded text-xs font-semibold ${item.color}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <JurnalTable data={detailData.journal} />
         </DetailCard>
       </div>
     </div>

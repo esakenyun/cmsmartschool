@@ -6,7 +6,8 @@ interface DetailCardProps {
   title: string;
   subtitle: string;
   icon: ReactNode;
-  chartOption: EChartsOption;
+  chartOption?: EChartsOption; // Make optional
+  customChartContent?: ReactNode; // New prop
   tableTitle: string;
   children: ReactNode; // Table content
 }
@@ -16,6 +17,7 @@ export function DetailCard({
   subtitle,
   icon,
   chartOption,
+  customChartContent,
   tableTitle,
   children,
 }: DetailCardProps) {
@@ -34,11 +36,17 @@ export function DetailCard({
 
       {/* Chart Section */}
       <div className="p-6 flex justify-center items-center bg-white min-h-[300px]">
-        <ReactECharts
-          option={chartOption}
-          style={{ height: "250px", width: "100%" }}
-          opts={{ renderer: "canvas" }}
-        />
+        {customChartContent ? (
+          <div className="w-full">{customChartContent}</div>
+        ) : (
+          chartOption && (
+            <ReactECharts
+              option={chartOption}
+              style={{ height: "250px", width: "100%" }}
+              opts={{ renderer: "canvas" }}
+            />
+          )
+        )}
       </div>
 
       {/* Table Section */}

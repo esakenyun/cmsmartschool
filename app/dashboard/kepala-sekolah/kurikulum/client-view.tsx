@@ -70,7 +70,7 @@ export default function KepalaSekolahKurikulum() {
         </div>
         <div className="space-y-8">
           <TableSkeleton />
-          <TableSkeleton />
+          {/* <TableSkeleton /> */}
           <TableSkeleton />
         </div>
       </div>
@@ -104,20 +104,20 @@ export default function KepalaSekolahKurikulum() {
   const getChartData = () => {
     let approved = 0;
     let submitted = 0;
-    let nullCount = 0;
+    // let nullCount = 0;
 
     filteredData.forEach((t) => {
       [...t.planning, ...t.implementation, ...t.evaluation].forEach((item) => {
         if (item.status === "approved") approved++;
         else if (item.status === "submitted") submitted++;
-        else nullCount++;
+        // else nullCount++;
       });
     });
 
     return [
       { name: "Disetujui", value: approved, color: "#10b981" },
       { name: "Menunggu Review", value: submitted, color: "#3b82f6" },
-      { name: "Belum Ada", value: nullCount, color: "#94a3b8" },
+      // { name: "Belum Ada", value: nullCount, color: "#94a3b8" },
     ];
   };
 

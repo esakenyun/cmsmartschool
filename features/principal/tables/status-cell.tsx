@@ -1,4 +1,10 @@
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   CheckCircle2,
   FileText,
   ChevronDown,
@@ -52,8 +58,8 @@ export const StatusCell = ({
         return "bg-green-100 text-green-700 border-green-200 hover:bg-green-200";
       case "submitted":
         return "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200";
-      default:
-        return "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200";
+      // default:
+      //   return "bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200";
     }
   };
 
@@ -63,55 +69,54 @@ export const StatusCell = ({
         return "Disetujui";
       case "submitted":
         return "Menunggu";
-      default:
-        return "Belum Ada";
+      // default:
+      //   return "Belum Ada";
     }
   };
 
   return (
     <div className="flex items-center gap-2">
-      <div className="relative status-dropdown min-w-[140px]">
-        <button
-          onClick={() => setOpenDropdownId(isOpen ? null : item.id)}
-          className={`w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all ${getStatusStyle(
-            item.status
-          )}`}
-        >
-          <div className="flex items-center gap-2">
-            <StatusIcon status={item.status} />
-            {getStatusLabel(item.status)}
-          </div>
-          <ChevronDown className="w-3 h-3 opacity-60" />
-        </button>
-
-        {isOpen && (
-          <div className="absolute left-0 top-full mt-1 w-48 bg-white rounded-lg shadow-xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-            <div className="p-1 space-y-0.5">
-              {(["null", "submitted", "approved"] as AdminStatus[]).map(
-                (option) => (
-                  <button
-                    key={option}
-                    onClick={() =>
-                      handleStatusUpdate(teacherId, category, item.id, option)
-                    }
-                    className={`w-full text-left px-2 py-2 text-xs font-medium rounded-md flex items-center gap-2 ${
-                      item.status === option
-                        ? "bg-slate-100 text-slate-900"
-                        : "text-slate-600 hover:bg-slate-50"
-                    }`}
-                  >
-                    <StatusIcon status={option} />
-                    {getStatusLabel(option)}
-                    {item.status === option && (
-                      <Check className="w-3 h-3 ml-auto opacity-60" />
-                    )}
-                  </button>
-                )
-              )}
+      <DropdownMenu
+        open={isOpen}
+        onOpenChange={(open) => setOpenDropdownId(open ? item.id : null)}
+        modal={false}
+      >
+        <DropdownMenuTrigger asChild>
+          <button
+            className={`w-[140px] flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all z-0 ${getStatusStyle(
+              item.status
+            )}`}
+          >
+            <div className="flex items-center gap-2">
+              <StatusIcon status={item.status} />
+              {getStatusLabel(item.status)}
             </div>
-          </div>
-        )}
-      </div>
+            <ChevronDown className="w-3 h-3 opacity-60" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="start"
+          className="w-[140px] z-0 space-y-1.5"
+        >
+          {(["submitted", "approved"] as AdminStatus[]).map((option) => (
+            <DropdownMenuItem
+              key={option}
+              onClick={() =>
+                handleStatusUpdate(teacherId, category, item.id, option)
+              }
+              className={`text-xs font-medium flex items-center gap-2 ${
+                item.status === option ? "bg-slate-100" : ""
+              }`}
+            >
+              <StatusIcon status={option} />
+              {getStatusLabel(option)}
+              {item.status === option && (
+                <Check className="w-3 h-3 ml-auto opacity-60" />
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
       {item.link && (
         <button
           onClick={() => setPreviewUrl(item.link!)}

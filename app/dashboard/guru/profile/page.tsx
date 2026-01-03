@@ -1,6 +1,6 @@
 import { ContentLayout } from "@/components/dashboard-panel/content-layout";
 import ProfileGuruContent from "./client-view";
-import { getUserByRole } from "@/features/auth/services/auth-service";
+import { getUserByRole } from "@/features/users/services/user-service";
 
 export default async function ProfileGuru() {
   const guru = await getUserByRole("guru");

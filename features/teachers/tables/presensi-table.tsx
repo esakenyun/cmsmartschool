@@ -32,7 +32,7 @@ export function PresensiTable({ data }: PresensiTableProps) {
                 <td className="px-4 py-3">
                   <span
                     className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                      item.reportKehadiran.includes("TEPAT")
+                      item.reportKehadiran === "Tepat Waktu"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-red-100 text-red-700"
                     }`}

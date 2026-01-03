@@ -1,7 +1,6 @@
-import { apiClient } from "@/lib/api";
-import { UserSchema } from "../schema/schema";
-import { UserData } from "../types/types";
 import { z } from "zod";
+import { apiClient } from "@/lib/api";
+import { UserSchema, UserData } from "../schemas/user-schema";
 
 export type { UserData };
 
@@ -22,6 +21,7 @@ export const getUserByRole = async (
   role: string
 ): Promise<UserData | undefined> => {
   const users = await fetchUsers();
+  // console.log(users.find((u) => u.role === role));
   return users.find((u) => u.role === role);
 };
 

@@ -16,8 +16,8 @@ import {
 
 export default function GuruDashboardContent() {
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(2025, 2, 1), // Default March 2025 as per previous code, or use current date
-    endDate: new Date(2025, 2, 31),
+    startDate: new Date(2025, 5, 1), // June 1st, 2025
+    endDate: new Date(2025, 5, 30), // June 30th, 2025
     key: "selection",
   });
 

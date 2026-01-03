@@ -14,8 +14,8 @@ import { DetailCard } from "@/features/principal/components/detail-card";
 import { generateTeacherReportPDF } from "@/features/principal/utils/pdf-generator";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getTeacherDetailData } from "@/features/teachers/utils/data-mapper";
 import { TendikDetailData } from "@/features/teachers/schemas/tendik-detail-schema";
-import { format } from "date-fns";
 import { PresensiTable } from "@/features/teachers/tables/presensi-table";
 import { MutabaahTable } from "@/features/teachers/tables/mutabaah-table";
 import { JurnalTable } from "@/features/teachers/tables/jurnal-table";
@@ -23,7 +23,7 @@ import ProgressBar from "@/features/teachers/components/progress-bar";
 
 export default function TendikKepalaSekolahContent({
   guru,
-  initialData,
+  initialData, // This is now ALL data for the teacher given by page.tsx
   initialDateRange,
 }: {
   guru: Teacher;
@@ -37,31 +37,35 @@ export default function TendikKepalaSekolahContent({
     key: "selection",
   });
 
-  // Effect to update URL when dateRange changes
+  // Client-side filtering logic
+  // Update handleDateChange to just set state, NO router push
   const handleDateChange = (newRange: {
     startDate: Date;
     endDate: Date;
     key: string;
   }) => {
     setDateRange(newRange);
-    if (newRange.startDate && newRange.endDate) {
-      const from = format(newRange.startDate, "yyyy-MM-dd");
-      const to = format(newRange.endDate, "yyyy-MM-dd");
-      router.push(`?from=${from}&to=${to}`);
-    }
   };
 
-  // Use data from props directly
-  const detailData = initialData;
+  // Filter the initialData (which is full history) based on current dateRange
+  const detailData = useMemo(() => {
+    if (!dateRange.startDate || !dateRange.endDate) return initialData;
+    return getTeacherDetailData(
+      initialData,
+      guru.name,
+      dateRange.startDate,
+      dateRange.endDate
+    );
+  }, [initialData, guru.name, dateRange]);
 
   // Calculate real stats from the filtered detailData
   const chartStats = useMemo(() => {
     // 1. Presensi Stats
-    const totalOnTime = detailData.attendance.filter((d) =>
-      d.reportKehadiran.includes("TEPAT")
+    const totalOnTime = detailData.attendance.filter(
+      (d) => d.reportKehadiran === "Tepat Waktu"
     ).length;
     const totalLate = detailData.attendance.filter(
-      (d) => !d.reportKehadiran.includes("TEPAT")
+      (d) => d.reportKehadiran === "Terlambat"
     ).length;
 
     // 2. Mutabaah Stats (Progress Bars Calculation)

@@ -2,11 +2,11 @@
 
 import { Edit3, Save, Upload, User, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-import { updateUser } from "@/features/auth/services/auth-service";
-import { UserData } from "@/features/auth/types/types";
+
 import Image from "next/image";
 import { toast } from "sonner";
-import { ProfileSkeleton } from "@/components/skeletons/profile-skeleton";
+import { UserData } from "@/features/users/schemas/user-schema";
+import { updateUser } from "@/features/users/services/user-service";
 
 interface ProfilePageProps {
   initialData?: UserData;
@@ -14,7 +14,6 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ initialData }: ProfilePageProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(!initialData);
   const [isSaving, setIsSaving] = useState(false);
   const [profile, setProfile] = useState({
     id: initialData?.id || "",
@@ -81,10 +80,6 @@ export default function ProfilePage({ initialData }: ProfilePageProps) {
       setIsSaving(false);
     }
   };
-
-  if (loading) {
-    return <ProfileSkeleton />;
-  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">

@@ -3,13 +3,17 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { getUserByEmail } from "@/features/auth/services/auth-service";
 import {
   validateRole,
   getRedirectPath,
 } from "@/features/auth/utils/auth-logic";
+import { getUserByEmail } from "@/features/users/services/user-service";
+import { AuthResponse } from "@/features/auth/types/auth-types";
 
-export async function loginWithEmail(_prevState: unknown, formData: FormData) {
+export async function loginWithEmail(
+  _prevState: unknown,
+  formData: FormData
+): Promise<AuthResponse> {
   const email = formData.get("email") as string;
   const requestedRole = formData.get("role") as string;
 

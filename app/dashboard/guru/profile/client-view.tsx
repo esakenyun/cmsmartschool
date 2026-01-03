@@ -9,10 +9,11 @@ import {
   Plus,
 } from "lucide-react";
 import { useState } from "react";
-import { updateUser } from "@/features/auth/services/auth-service";
-import { UserData } from "@/features/auth/types/types";
+
 import Image from "next/image";
 import { toast } from "sonner";
+import { UserData } from "@/features/users/schemas/user-schema";
+import { updateUser } from "@/features/users/services/user-service";
 
 interface ProfileGuruContentProps {
   initialData?: UserData;
@@ -269,6 +270,7 @@ export default function ProfileGuruContent({
           </div>
         </div>
       </div>
+      
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

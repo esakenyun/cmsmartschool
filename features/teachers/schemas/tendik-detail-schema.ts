@@ -11,7 +11,6 @@ export const TendikAttendanceSchema = z.object({
   jarak: z.string(),
   reportJarak: z.string(),
   foto: z.string(),
-  // status removed as it is not in the data interface
   nama: z.string(),
   nik: z.string().optional(),
   jabatan: z.string(),
@@ -76,3 +75,6 @@ export const TendikDetailSchema = z.object({
 });
 
 export type TendikDetailData = z.infer<typeof TendikDetailSchema>;
+
+
+

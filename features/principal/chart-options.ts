@@ -163,8 +163,12 @@ export const getDetailPresensiOption = (
         label: { show: false, position: "center" },
         emphasis: { label: { show: true, fontSize: 16, fontWeight: "bold" } },
         data: [
-          { value: onTime, name: "Hadir", itemStyle: { color: "#10b981" } }, // Green
-          { value: late, name: "Tidak Hadir", itemStyle: { color: "#ef4444" } }, // Red
+          {
+            value: onTime,
+            name: "Tepat Waktu",
+            itemStyle: { color: "#10b981" },
+          }, // Green
+          { value: late, name: "Terlambat", itemStyle: { color: "#ef4444" } }, // Red
         ],
       },
     ],

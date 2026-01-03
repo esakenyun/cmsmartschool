@@ -171,7 +171,7 @@ function TeacherCard({
 }) {
   const stats = useMemo(() => {
     const rawStats = getTeacherStats(
-      teacher.id,
+      teacher.name,
       dateRange.startDate,
       dateRange.endDate
     );
@@ -206,7 +206,7 @@ function TeacherCard({
       mutabaah: rawStats.avgMutabaah,
       journal: journalPct,
     };
-  }, [teacher.id, dateRange]);
+  }, [teacher.id, teacher.name, dateRange]);
 
   return (
     <Link href={`/dashboard/kepala-sekolah/tendik/${teacher.id}`}>

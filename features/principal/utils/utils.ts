@@ -7,11 +7,14 @@ import {
   format,
 } from "date-fns";
 import { id } from "date-fns/locale";
-import {
-  tendikAttendanceData,
-  tendikMutabaahData,
-  tendikJournalData,
-} from "@/features/teachers/data/tendik-dummy-detail";
+import { generateTendikDetail } from "@/features/teachers/data/data-tendik";
+
+// Generate fresh data
+const {
+  attendance: tendikAttendanceData,
+  mutabaah: tendikMutabaahData,
+  journal: tendikJournalData,
+} = generateTendikDetail();
 
 export const COLORS = ["#10b981", "#f59e0b", "#ef4444"]; // Green, Amber, Red
 
@@ -34,35 +37,36 @@ export const getTeacherStats = (
   const end = new Date(endDate);
 
   // 1. Filter Data
-  const isAll = teacherId === "all";
+  const isAll = teacherId === "all"; // teacherId is actually Name now, or "all"
 
   const attendance = tendikAttendanceData.filter((d) => {
     const date = parseDate(d.tanggal);
     const inRange = date >= start && date <= end;
-    const matchId = isAll || d.id === teacherId;
+    // d.nama matches the passed name
+    const matchId = isAll || d.nama === teacherId;
     return inRange && matchId;
   });
 
   const mutabaah = tendikMutabaahData.filter((d) => {
     const date = parseDate(d.tanggal);
     const inRange = date >= start && date <= end;
-    const matchId = isAll || d.id === teacherId;
+    const matchId = isAll || d.nama === teacherId;
     return inRange && matchId;
   });
 
   const journal = tendikJournalData.filter((d) => {
     const date = parseDate(d.tanggal);
     const inRange = date >= start && date <= end;
-    const matchId = isAll || d.id === teacherId;
+    const matchId = isAll || d.nama === teacherId;
     return inRange && matchId;
   });
 
   // 2. Calculate Attendance Stats
-  const totalOnTime = attendance.filter((d) =>
-    d.reportKehadiran.includes("TEPAT")
+  const totalOnTime = attendance.filter(
+    (d) => d.reportKehadiran === "Tepat Waktu"
   ).length;
   const totalLate = attendance.filter(
-    (d) => !d.reportKehadiran.includes("TEPAT")
+    (d) => d.reportKehadiran === "Terlambat"
   ).length;
   const totalLogs = totalOnTime + totalLate;
 
@@ -76,10 +80,12 @@ export const getTeacherStats = (
     trendData = days.map((day) => {
       const dayStr = format(day, "dd/MM/yyyy");
       const dayData = attendance.filter((d) => d.tanggal === dayStr);
-      const onTime = dayData.filter((d) =>
-        d.reportKehadiran.includes("TEPAT")
+      const onTime = dayData.filter(
+        (d) => d.reportKehadiran === "Tepat Waktu"
       ).length;
-      const late = dayData.length - onTime;
+      const late = dayData.filter(
+        (d) => d.reportKehadiran === "Terlambat"
+      ).length;
       return {
         date: format(day, "EEEE", { locale: id }),
         onTime,
@@ -103,10 +109,12 @@ export const getTeacherStats = (
         return dDate >= weekStart && dDate <= weekEnd;
       });
 
-      const onTime = weekData.filter((d) =>
-        d.reportKehadiran.includes("TEPAT")
+      const onTime = weekData.filter(
+        (d) => d.reportKehadiran === "Tepat Waktu"
       ).length;
-      const late = weekData.length - onTime;
+      const late = weekData.filter(
+        (d) => d.reportKehadiran === "Terlambat"
+      ).length;
 
       return {
         date: `Minggu ${i + 1}`,
@@ -129,10 +137,12 @@ export const getTeacherStats = (
         );
       });
 
-      const onTime = monthData.filter((d) =>
-        d.reportKehadiran.includes("TEPAT")
+      const onTime = monthData.filter(
+        (d) => d.reportKehadiran === "Tepat Waktu"
       ).length;
-      const late = monthData.length - onTime;
+      const late = monthData.filter(
+        (d) => d.reportKehadiran === "Terlambat"
+      ).length;
 
       return {
         date: monthStr,

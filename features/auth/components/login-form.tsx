@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ChevronRight, Mail } from "lucide-react";
-import { roles as roleData } from "@/features/auth/data/roles";
+import { roles as roleData } from "@/features/auth/config/roles";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

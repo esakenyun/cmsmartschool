@@ -137,8 +137,8 @@ export default function DashboardKepalaSekolahContent() {
                   <span className="truncate">
                     {selectedTeacher === "all"
                       ? "Semua Guru"
-                      : teachers.find((t) => t.id === selectedTeacher)?.name ||
-                        "Pilih Guru..."}
+                      : teachers.find((t) => t.name === selectedTeacher)
+                          ?.name || "Pilih Guru..."}
                   </span>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
@@ -171,14 +171,14 @@ export default function DashboardKepalaSekolahContent() {
                           key={t.id}
                           value={t.name}
                           onSelect={() => {
-                            setSelectedTeacher(t.id);
+                            setSelectedTeacher(t.name);
                             setOpen(false);
                           }}
                         >
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              selectedTeacher === t.id
+                              selectedTeacher === t.name
                                 ? "opacity-100"
                                 : "opacity-0"
                             )}

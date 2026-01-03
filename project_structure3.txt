@@ -1,0 +1,200 @@
+.
+├── app
+│   ├── actions
+│   │   └── auth.ts
+│   ├── dashboard
+│   │   ├── guru
+│   │   │   ├── administrasi
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── client-view.tsx
+│   │   │   ├── kinerja
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── mata-pelajaran
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── profile
+│   │   │       ├── client-view.tsx
+│   │   │       ├── loading.tsx
+│   │   │       └── page.tsx
+│   │   ├── kepala-sekolah
+│   │   │   ├── client-view.tsx
+│   │   │   ├── kesiswaan
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── kurikulum
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── ppdb
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── profile
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── sarana-prasarana
+│   │   │   │   └── page.tsx
+│   │   │   └── tendik
+│   │   │       ├── client-view.tsx
+│   │   │       ├── [id]
+│   │   │       │   ├── client-view.tsx
+│   │   │       │   └── page.tsx
+│   │   │       └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── pimpinan
+│   │   │   ├── asset
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── client-view.tsx
+│   │   │   ├── hybrid-learning
+│   │   │   │   └── page.tsx
+│   │   │   ├── kesiswaan
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── kurikulum
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── ppdb
+│   │   │   │   ├── client-view.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── tendik
+│   │   │       ├── client-view.tsx
+│   │   │       └── page.tsx
+│   │   └── siswa
+│   │       ├── client-view.tsx
+│   │       ├── mata-pelajaran
+│   │       │   ├── client-view.tsx
+│   │       │   └── page.tsx
+│   │       └── page.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── login
+│       └── page.tsx
+├── components
+│   ├── dashboard-panel
+│   │   ├── collapse-menu-button.tsx
+│   │   ├── content-layout.tsx
+│   │   ├── dashboard-layout.tsx
+│   │   ├── menu.tsx
+│   │   ├── navbar.tsx
+│   │   ├── sheet-menu.tsx
+│   │   ├── sidebar-toggle.tsx
+│   │   ├── sidebar.tsx
+│   │   └── user-nav.tsx
+│   ├── skeletons
+│   │   ├── card-skeleton.tsx
+│   │   ├── chart-skeleton.tsx
+│   │   ├── profile-skeleton.tsx
+│   │   ├── table-skeleton.tsx
+│   │   └── teacher-card-skeleton.tsx
+│   └── ui
+│       ├── avatar.tsx
+│       ├── button.tsx
+│       ├── collapsible.tsx
+│       ├── command.tsx
+│       ├── date-range-picker.tsx
+│       ├── dropdown-menu.tsx
+│       ├── label.tsx
+│       ├── popover.tsx
+│       ├── scroll-area.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── skeleton.tsx
+│       ├── switch.tsx
+│       └── tooltip.tsx
+├── components.json
+├── .env.local
+├── eslint.config.mjs
+├── features
+│   ├── auth
+│   │   ├── components
+│   │   │   └── login-form.tsx
+│   │   ├── data
+│   │   │   └── roles.tsx
+│   │   ├── hooks
+│   │   │   └── use-role-settings.ts
+│   │   └── utils
+│   │       └── auth-logic.ts
+│   ├── leader
+│   │   ├── components
+│   │   │   └── leader-header.tsx
+│   │   ├── services
+│   │   └── types
+│   ├── principal
+│   │   ├── chart-options.ts
+│   │   ├── components
+│   │   │   ├── detail-card.tsx
+│   │   │   └── kurikulum
+│   │   │       └── stats-chart.tsx
+│   │   ├── data
+│   │   │   └── data.ts
+│   │   ├── services
+│   │   ├── tables
+│   │   │   ├── admin-table.tsx
+│   │   │   └── status-cell.tsx
+│   │   ├── types
+│   │   │   ├── dashboard-types.ts
+│   │   │   └── types.ts
+│   │   └── utils
+│   │       ├── pdf-generator.ts
+│   │       └── utils.ts
+│   ├── teachers
+│   │   ├── chart-options.ts
+│   │   ├── components
+│   │   │   └── progress-bar.tsx
+│   │   ├── data
+│   │   │   ├── dashboard-dummy.ts
+│   │   │   ├── data-teacher.ts
+│   │   │   ├── kinerja-dummy.ts
+│   │   │   └── tendik-dummy-detail.ts
+│   │   ├── schemas
+│   │   │   └── tendik-detail-schema.ts
+│   │   ├── services
+│   │   │   └── teacher-service.ts
+│   │   ├── tables
+│   │   │   ├── jurnal-table.tsx
+│   │   │   ├── mutabaah-table.tsx
+│   │   │   └── presensi-table.tsx
+│   │   └── types
+│   └── users
+│       ├── schema
+│       │   └── user-schema.ts
+│       ├── services
+│       │   └── user-services.ts
+│       └── types
+│           └── user-types.ts
+├── folder-structure2.txt
+├── .gitignore
+├── hooks
+│   ├── use-sidebar.ts
+│   └── use-store.ts
+├── lib
+│   ├── api.ts
+│   ├── menu-list.ts
+│   └── utils.ts
+├── next.config.ts
+├── next-env.d.ts
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── project_structure2.txt
+├── project_structure3.txt
+├── proxy.ts
+├── public
+│   ├── background-cm.png
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── logocm.png
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── tsconfig.json
+└── tsconfig.tsbuildinfo
+
+63 directories, 135 files

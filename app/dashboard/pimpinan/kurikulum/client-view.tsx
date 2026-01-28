@@ -1,6 +1,12 @@
 "use client";
 
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  NotebookPen,
+  CircleX,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { TableSkeleton } from "@/components/skeletons/table-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -60,6 +66,253 @@ export default function PimpinanKurikulumContent() {
   return (
     <main>
       <PrincipalHeader />
+
+      <div className="py-5 mb-5">
+        <h1 className="text-2xl font-semibold">Summary Unit</h1>
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5 py-2">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col hover:shadow-md transition-shadow">
+            <div className="flex mb-6">
+              <h2 className="text-xl font-bold text-slate-800">
+                Unit TK Cendekia Muda
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Perencanaan
+                </p>
+                <p className="text-3xl font-bold text-slate-900">50</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Evaluasi
+                </p>
+                <p className="text-3xl font-bold text-slate-900">20</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Disetujui</p>
+                  <p className="text-sm font-bold text-slate-800">30</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Menunggu Review</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <NotebookPen className="w-4 h-4 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Revisi</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+                  <CircleX className="w-4 h-4 text-rose-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Ditolak</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col hover:shadow-md transition-shadow">
+            <div className="flex mb-6">
+              <h2 className="text-xl font-bold text-slate-800">
+                Unit SD Cendekia Muda
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Perencanaan
+                </p>
+                <p className="text-3xl font-bold text-slate-900">50</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Evaluasi
+                </p>
+                <p className="text-3xl font-bold text-slate-900">20</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Disetujui</p>
+                  <p className="text-sm font-bold text-slate-800">30</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Menunggu Review</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <NotebookPen className="w-4 h-4 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Revisi</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+                  <CircleX className="w-4 h-4 text-rose-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Ditolak</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col hover:shadow-md transition-shadow">
+            <div className="flex mb-6">
+              <h2 className="text-xl font-bold text-slate-800">
+                Unit SMP Cendekia Muda
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Perencanaan
+                </p>
+                <p className="text-3xl font-bold text-slate-900">50</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Evaluasi
+                </p>
+                <p className="text-3xl font-bold text-slate-900">20</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Disetujui</p>
+                  <p className="text-sm font-bold text-slate-800">30</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Menunggu Review</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <NotebookPen className="w-4 h-4 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Revisi</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+                  <CircleX className="w-4 h-4 text-rose-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Ditolak</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col hover:shadow-md transition-shadow">
+            <div className="flex mb-6">
+              <h2 className="text-xl font-bold text-slate-800">
+                Unit SMA Cendekia Muda
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Perencanaan
+                </p>
+                <p className="text-3xl font-bold text-slate-900">50</p>
+              </div>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <p className="text-sm font-medium text-slate-500 mb-1">
+                  Total Evaluasi
+                </p>
+                <p className="text-3xl font-bold text-slate-900">20</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Disetujui</p>
+                  <p className="text-sm font-bold text-slate-800">30</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Clock className="w-4 h-4 text-blue-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Menunggu Review</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <NotebookPen className="w-4 h-4 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Revisi</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center">
+                  <CircleX className="w-4 h-4 text-rose-500" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Ditolak</p>
+                  <p className="text-sm font-bold text-slate-800">10</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
           <h3 className="font-bold text-lg text-slate-800">

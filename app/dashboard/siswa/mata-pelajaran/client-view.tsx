@@ -4,6 +4,7 @@ import { ChevronRight, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { CardSkeleton } from "@/components/skeletons/card-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function MataPelajaranSiswaContent() {
   const [loading, setLoading] = useState(true);
@@ -126,8 +127,9 @@ export default function MataPelajaranSiswaContent() {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {subjects.map((subject) => (
-          <button
+          <Link
             key={subject.id}
+            href={`/dashboard/siswa/mata-pelajaran/${subject.id}`}
             className="group bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all text-left flex flex-col justify-between h-40 relative overflow-hidden z-0"
           >
             <div
@@ -154,7 +156,7 @@ export default function MataPelajaranSiswaContent() {
                 <ChevronRight className="w-4 h-4" />
               </div>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
     </div>

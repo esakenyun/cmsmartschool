@@ -50,7 +50,7 @@ export default function DashboardSiswaContent() {
         id: 1,
         title: "Tagihan Administrasi Bulan Desember",
         date: "21 Des 2024",
-        category: "Taghihan",
+        category: "Tagihan",
         content:
           "Halo anak-anak sholeh dan sholehah, Semoga kalian dalam keadaan sehat dan penuh semangat. Kami mengingatkan agar kalian memberitahukan orang tua atau wali untuk segera memeriksa tagihan administrasi bulan Desember.",
       },
@@ -95,14 +95,20 @@ export default function DashboardSiswaContent() {
           </p>
           <div className="mt-6 flex gap-3">
             <Link
-              href={"/siswa/mata-pelajaran"}
+              href={"/dashboard/siswa/mata-pelajaran"}
               className="bg-white text-student-600 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-student-50 transition-colors shadow-sm"
             >
               Buka Kelas Saya
             </Link>
-            <button className="bg-student-600/50 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-student-600 transition-colors backdrop-blur-sm">
+            <Link
+              href={
+                "https://app.muslimpro.com/id/prayer-times/indonesia/waktu-sholat-bandung"
+              }
+              target="_blank"
+              className="bg-student-600/50 text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-student-600 transition-colors backdrop-blur-sm"
+            >
               Lihat Jadwal Sholat
-            </button>
+            </Link>
           </div>
         </div>
         {/* Decorative Circles */}

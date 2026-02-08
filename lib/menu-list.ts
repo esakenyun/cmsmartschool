@@ -8,6 +8,8 @@ import {
   BarChart,
   ScrollText,
   Layers,
+  Calendar,
+  MoonStar,
 } from "lucide-react";
 
 type Submenu = {
@@ -211,6 +213,18 @@ export function getMenuList(pathname: string): Group[] {
             label: "Mata Pelajaran",
             icon: BookOpen,
             active: pathname.includes("/dashboard/siswa/mata-pelajaran"),
+          },
+          {
+            href: "/dashboard/siswa/presensi",
+            label: "Presensi",
+            icon: Calendar,
+            active: pathname.includes("/dashboard/siswa/presensi"),
+          },
+          {
+            href: "/dashboard/siswa/mutabaahyaumiah",
+            label: "Mutabaah Yaumiah",
+            icon: MoonStar,
+            active: pathname.includes("/dashboard/siswa/mutabaahyaumiah"),
           },
         ],
       },

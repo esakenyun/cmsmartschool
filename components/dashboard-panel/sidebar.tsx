@@ -37,7 +37,7 @@ export function Sidebar({
         !getOpenState() ? "w-[90px]" : "w-60",
         settings.disabled && "hidden",
         backgroundColor,
-        textColor
+        textColor,
       )}
     >
       <SidebarToggle isOpen={isOpen} setIsOpen={toggleOpen} />
@@ -50,7 +50,7 @@ export function Sidebar({
           <Button
             className={cn(
               "transition-transform ease-in-out duration-300 mb-1",
-              !getOpenState() ? "translate-x-1" : "translate-x-0"
+              !getOpenState() ? "translate-x-1" : "translate-x-0",
             )}
             variant="linkMenu"
             asChild
@@ -73,7 +73,7 @@ export function Sidebar({
                   !getOpenState()
                     ? "-translate-x-96 opacity-0 hidden"
                     : "translate-x-0 opacity-100",
-                  textColor
+                  textColor,
                 )}
               >
                 <h1>{title}</h1>

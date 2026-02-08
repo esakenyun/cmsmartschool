@@ -1,3 +1,5 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import { MutabaahRecapitulation } from "../types/mutabaah-types";
 
 interface MutabaahRecapTableProps {
@@ -5,6 +7,23 @@ interface MutabaahRecapTableProps {
 }
 
 export function MutabaahRecapTable({ data }: MutabaahRecapTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+
+  const paginatedData = data.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="overflow-x-auto rounded-lg border border-slate-200">
@@ -282,7 +301,7 @@ export function MutabaahRecapTable({ data }: MutabaahRecapTableProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {data.map((item, index) => (
+              {paginatedData.map((item, index) => (
                 <tr key={index} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3 border-r border-slate-200 font-medium text-slate-700 bg-white sticky left-0 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] text-center">
                     {item.bulan}
@@ -471,7 +490,7 @@ export function MutabaahRecapTable({ data }: MutabaahRecapTableProps) {
                   </td>
                 </tr>
               ))}
-              {data.length === 0 && (
+              {paginatedData.length === 0 && (
                 <tr>
                   <td
                     colSpan={50}
@@ -485,6 +504,41 @@ export function MutabaahRecapTable({ data }: MutabaahRecapTableProps) {
           </table>
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2">
+          <div className="text-xs text-slate-500">
+            Menampilkan{" "}
+            <span className="font-medium">
+              {(currentPage - 1) * itemsPerPage + 1}
+            </span>{" "}
+            sampai{" "}
+            <span className="font-medium">
+              {Math.min(currentPage * itemsPerPage, data.length)}
+            </span>{" "}
+            dari <span className="font-medium">{data.length}</span> data
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className="p-1 rounded hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4 text-slate-600" />
+            </button>
+            <span className="text-xs font-medium text-slate-600">
+              Halaman {currentPage} dari {totalPages}
+            </span>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="p-1 rounded hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="w-4 h-4 text-slate-600" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

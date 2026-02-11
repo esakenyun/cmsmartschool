@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Clock, Star, Calendar } from "lucide-react";
+import { Bell, Star, Calendar } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { CardSkeleton } from "@/components/skeletons/card-skeleton";
@@ -183,7 +183,7 @@ export default function DashboardSiswaContent() {
 
         {/* Kolom Kanan: Jadwal Hari Ini & Quote */}
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          {/* <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
               <Clock className="w-4 h-4 text-student-500" />
               Agenda Hari Ini
@@ -217,7 +217,7 @@ export default function DashboardSiswaContent() {
                 </p>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-center">
             <Star className="w-8 h-8 text-emerald-500 mx-auto mb-3" />

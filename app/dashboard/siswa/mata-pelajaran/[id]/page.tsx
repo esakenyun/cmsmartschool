@@ -1,5 +1,5 @@
 import { ContentLayout } from "@/components/dashboard-panel/content-layout";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import DetailMataPelajaranClient from "./client-view";
 
@@ -10,12 +10,12 @@ export default function DetailMataPelajaran() {
         <div className="flex justify-between items-center text-sm">
           <Link
             href={"/dashboard/siswa/mata-pelajaran"}
-            className="flex items-center gap-2 bg-white rounded-lg shadow-lg p-3 hover:bg-slate-200 hover:text-white  "
+            className="flex items-center gap-2 bg-white rounded-lg shadow-lg p-3 hover:bg-rose-500 hover:text-white"
           >
             <ArrowLeft className="w-6 h-6" />
             <span>Kembali</span>
           </Link>
-          <Link
+          {/* <Link
             href={
               "https://sites.google.com/cendekiamuda.sch.id/science82526/home?read_current=1"
             }
@@ -24,9 +24,9 @@ export default function DetailMataPelajaran() {
           >
             <ExternalLink />
             <span className="font-medium">Akses Dashboard Eksternal</span>
-          </Link>
+          </Link> */}
         </div>
-        <div className="mt-5 xl:px-12">
+        <div className="mt-5">
           <div className="bg-white rounded-2xl p-10 border border-slate-200 text-center mb-10 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-rose-500/5 rounded-full -ml-24 -mb-24"></div>

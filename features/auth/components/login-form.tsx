@@ -43,7 +43,7 @@ export default function LoginForm() {
   };
 
   /* Roles data moved to @/features/auth/data/roles.tsx */
-  const roles = roleData;
+  const roles = roleData.filter((role) => role.id !== "admin");
   const activeRole = roles.find((r) => r.id === selectedRole);
   return (
     <div className="w-full max-w-5xl rounded-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px] md:h-[600px] mx-3 my-3 md:my-0 md:mx-5">

@@ -1,4 +1,10 @@
-import { BookOpen, Building2, GraduationCap, Users } from "lucide-react";
+import {
+  BookOpen,
+  Building2,
+  GraduationCap,
+  Users,
+  ShieldCheck,
+} from "lucide-react";
 import React from "react";
 
 export interface RoleData {
@@ -64,5 +70,17 @@ export const roles: RoleData[] = [
     lightColor: "bg-student-50",
     textColor: "text-student-600",
     ringColor: "ring-student-200",
+  },
+  {
+    id: "admin",
+    title: "Administrator",
+    subtitle: "System Administrator",
+    description: "Akses penuh ke pengaturan sistem dan manajemen user.",
+    icon: <ShieldCheck className="w-8 h-8" />,
+    color: "bg-slate-800",
+    hoverColor: "hover:bg-slate-900",
+    lightColor: "bg-slate-100",
+    textColor: "text-slate-800",
+    ringColor: "ring-slate-300",
   },
 ];

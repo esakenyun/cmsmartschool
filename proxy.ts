@@ -66,6 +66,8 @@ function getDashboardPath(role: string): string {
       return "/dashboard/guru";
     case "siswa":
       return "/dashboard/siswa";
+    case "admin":
+      return "/dashboard/admin";
     default:
       return "/dashboard";
   }

@@ -10,6 +10,8 @@ import {
   Layers,
   Calendar,
   MoonStar,
+  Image,
+  PanelsTopLeft,
 } from "lucide-react";
 
 type Submenu = {
@@ -226,6 +228,45 @@ export function getMenuList(pathname: string): Group[] {
             icon: MoonStar,
             active: pathname.includes("/dashboard/siswa/mutabaahyaumiah"),
           },
+        ],
+      },
+    ];
+  }
+
+  if (pathname.includes("/dashboard/admin")) {
+    return [
+      {
+        groupLabel: "",
+        menus: [
+          {
+            href: "/dashboard/admin",
+            label: "Dashboard",
+            icon: LayoutGrid,
+            submenus: [],
+          },
+        ],
+      },
+      {
+        groupLabel: "Menu",
+        menus: [
+          {
+            href: "/dashboard/admin/manajemen-kelas",
+            label: "Manajemen Kelas",
+            icon: PanelsTopLeft,
+            active: pathname.includes("/dashboard/admin/manajemen-kelas"),
+          },
+          {
+            href: "/dashboard/admin/manajemen-banner",
+            label: "Manajemen Banner",
+            icon: Image,
+            active: pathname.includes("/dashboard/admin/manajemen-banner"),
+          },
+          // {
+          //   href: "/dashboard/admin/mutabaahyaumiah",
+          //   label: "Mutabaah Yaumiah",
+          //   icon: MoonStar,
+          //   active: pathname.includes("/dashboard/admin/mutabaahyaumiah"),
+          // },
         ],
       },
     ];

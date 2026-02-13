@@ -16,6 +16,8 @@ export function validateRole(userRole: string, requestedRole: string): boolean {
       return userRoleLower === "teacher" || userRoleLower === "guru";
     case "siswa":
       return userRoleLower === "student" || userRoleLower === "siswa";
+    case "admin":
+      return userRoleLower === "admin";
     default:
       return false;
   }
@@ -31,6 +33,8 @@ export function getRedirectPath(role: string): string {
       return "/dashboard/guru";
     case "siswa":
       return "/dashboard/siswa";
+    case "admin":
+      return "/dashboard/admin";
     default:
       return "/dashboard";
   }

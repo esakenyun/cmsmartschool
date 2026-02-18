@@ -6,24 +6,27 @@ import Link from "next/link";
 
 export default function DetailManajemenContent({
   kelas,
+  unitId,
 }: {
   kelas: {
     id: number;
+    unitId?: string;
     name: string;
     wali: string;
     students: number;
     teachers: number;
     room: string;
   };
+  unitId: string;
 }) {
   return (
     <div className="space-y-8">
       <Link
-        href={"/dashboard/admin/manajemen-kelas"}
+        href={`/dashboard/admin/manajemen-kelas/${unitId}`}
         className="flex items-center gap-2 text-sm text-blue-600 font-semibold hover:underline"
       >
         <ArrowLeft size={16} />
-        Kembali ke Daftar Kelas
+        Kembali ke Daftar Kelas {unitId.toUpperCase()}
       </Link>
 
       <div className="bg-linear-to-r from-teacher-500 to-emerald-500 rounded-2xl p-8 text-white">

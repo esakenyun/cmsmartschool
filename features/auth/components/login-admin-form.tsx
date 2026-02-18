@@ -40,7 +40,7 @@ export default function LoginAdminForm() {
     <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 relative z-10">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center">
           <Image src="/logocm.png" width={20} height={20} alt="Logo" />
         </div>
         <h1 className="text-xl font-bold tracking-wide text-slate-900">

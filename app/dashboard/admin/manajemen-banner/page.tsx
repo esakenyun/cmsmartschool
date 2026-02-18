@@ -1,11 +1,10 @@
 import { ContentLayout } from "@/components/dashboard-panel/content-layout";
-import ManajemenBannerContent from "./client-view";
-import { bannerData } from "@/features/admin/data/mock-data";
+import UnitListView from "./unit-list-view";
 
 export default function ManajemenBanner() {
   return (
     <ContentLayout title="Manajemen Banner">
-      <ManajemenBannerContent initialData={bannerData} />
+      <UnitListView />
     </ContentLayout>
   );
 }

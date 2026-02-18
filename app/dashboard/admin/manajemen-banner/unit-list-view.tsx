@@ -1,16 +1,17 @@
 "use client";
+
 import { units } from "@/features/admin/data/mock-data";
-import { ArrowRight, School } from "lucide-react";
+import { ArrowRight, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 
-export default function ManajemenKelasContent() {
+export default function UnitListView() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Manajemen Kelas</h1>
+          <h1 className="text-2xl font-bold">Manajemen Banner</h1>
           <p className="text-gray-500 text-sm">
-            Pilih tingkat pendidikan untuk melihat daftar kelas
+            Pilih tingkat pendidikan untuk mengatur banner
           </p>
         </div>
       </div>
@@ -19,7 +20,7 @@ export default function ManajemenKelasContent() {
         {units.map((unit) => (
           <Link
             key={unit.id}
-            href={`/dashboard/admin/manajemen-kelas/${unit.id}`}
+            href={`/dashboard/admin/manajemen-banner/${unit.id}`}
             className="group block"
           >
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all h-full flex flex-col">
@@ -28,10 +29,10 @@ export default function ManajemenKelasContent() {
                   <div
                     className={`p-3 rounded-xl bg-white bg-opacity-50 backdrop-blur-sm shadow-sm`}
                   >
-                    <School className="w-8 h-8" />
+                    <ImageIcon className="w-8 h-8" />
                   </div>
                   <span className="bg-white bg-opacity-60 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm">
-                    {unit.count} Kelas
+                    {unit.name}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold mt-4">{unit.name}</h3>
@@ -40,7 +41,7 @@ export default function ManajemenKelasContent() {
 
               <div className="p-4 bg-white grow flex items-end">
                 <div className="w-full flex items-center justify-between text-sm font-medium text-gray-600 group-hover:text-blue-600 transition-colors">
-                  <span>Lihat Detail</span>
+                  <span>Kelola Banner</span>
                   <ArrowRight size={18} />
                 </div>
               </div>

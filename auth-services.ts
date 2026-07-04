@@ -1,4 +1,4 @@
-import { apiClient } from "@/core/api/client";
+import { apiClient } from "@/lib/api";
 import {
   UserData,
   Training,
@@ -13,7 +13,7 @@ import {
   TeachingAssignmentExternal,
   StudentPresensi,
   Jabatan,
-} from "@/features/auth/types/types";
+} from "@/types-auth";
 
 export type { UserData };
 
@@ -347,7 +347,7 @@ export const getYoutubePlaylist =
     }
   };
 
-import { ModulAjar, EvaluasiModulAjar } from "@/features/auth/types/types";
+import { ModulAjar, EvaluasiModulAjar } from "@/types-auth";
 
 export const syncModulAjar = async (): Promise<unknown> => {
   return apiClient
@@ -387,7 +387,7 @@ export const getEvaluasiModulAjar = async (
     .catch(handleServerAuthError);
 };
 
-import { Presensi, MutabaahRecord } from "../types/types";
+import { Presensi, MutabaahRecord } from "@/types-auth";
 
 export const syncPresensi = async () => {
   return apiClient
@@ -415,7 +415,7 @@ export const getMutabaah = async (): Promise<MutabaahRecord[]> => {
     .catch(handleServerAuthError);
 };
 
-import { JurnalRecord } from "../types/types";
+import { JurnalRecord } from "@/types-auth";
 
 export const syncJurnal = async () => {
   return apiClient
@@ -430,7 +430,7 @@ export const getJurnal = async (): Promise<JurnalRecord[]> => {
     .catch(handleServerAuthError);
 };
 
-import { AcademicTerm } from "@/features/auth/types/types";
+import { AcademicTerm } from "@/types-auth";
 
 export const getActiveAcademicTerm = async (): Promise<AcademicTerm | null> => {
   try {
@@ -547,7 +547,7 @@ export const updateEvaluasiModulAjarStatus = async (
     .catch(handleServerAuthError);
 };
 
-import { TeacherImplementation } from "@/features/auth/types/types";
+import { TeacherImplementation } from "@/types-auth";
 
 export const createTeacherImplementation = async (
   payload: Partial<TeacherImplementation>,
@@ -613,7 +613,7 @@ export const deleteTeacherImplementation = async (
 import {
   HybridProgressPayload,
   HybridProgressResponse,
-} from "@/features/auth/types/types";
+} from "@/types-auth";
 
 export const setHybridTarget = async (
   payload: HybridProgressPayload,
@@ -674,7 +674,7 @@ export const deleteHybridTarget = async (
   }
 };
 
-import { TeachingAssignment } from "@/features/auth/types/types";
+import { TeachingAssignment } from "@/types-auth";
 
 export const getTeachingAssignments = async (
   academicTermId: number,
@@ -840,7 +840,7 @@ export const getStudentSubjectLinks = async (
     .catch(handleServerAuthError);
 };
 
-import { StudentMutabaahRecord } from "@/features/auth/types/types";
+import { StudentMutabaahRecord } from "@/types-auth";
 
 export const getStudentPresensiData = async (
   month?: string,
@@ -907,7 +907,6 @@ export const getLiveMonitoring = async (unitParam?: string): Promise<any> => {
         "Cache-Control": "no-cache",
         Pragma: "no-cache",
       },
-      cache: "no-store",
     })
     .catch((e) => {
       console.error("Failed to fetch live monitoring:", e);
@@ -943,7 +942,6 @@ export const getStreamHistory = async (
         "Cache-Control": "no-cache",
         Pragma: "no-cache",
       },
-      cache: "no-store",
     })
     .catch((e) => {
       console.error("Failed to fetch stream history:", e);

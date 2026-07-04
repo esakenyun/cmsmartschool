@@ -179,6 +179,24 @@ export function getMenuList(pathname: string): Group[] {
             icon: BookOpen,
             active: pathname.includes("/dashboard/guru/mata-pelajaran"),
           },
+          {
+            href: "/dashboard/guru/pembelajaran",
+            label: "Pembelajaran",
+            icon: FileText,
+            active: pathname.includes("/dashboard/guru/pembelajaran"),
+            submenus: [
+              {
+                href: "/dashboard/guru/pembelajaran/materi",
+                label: "Materi",
+                active: pathname.includes("/dashboard/guru/pembelajaran/materi"),
+              },
+              {
+                href: "/dashboard/guru/pembelajaran/tugas",
+                label: "Tugas",
+                active: pathname.includes("/dashboard/guru/pembelajaran/tugas"),
+              },
+            ],
+          },
         ],
       },
       {

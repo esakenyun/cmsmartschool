@@ -8,10 +8,10 @@ import {
   Plus,
   Search,
   Calendar,
-  Users,
-  Award,
-  Trash2,
+  Users, Trash2,
   BookOpen,
+  Pencil,
+  FileText
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -50,11 +50,15 @@ export default function TugasGuruContent() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTugas, setEditingTugas] = useState<Tugas | null>(null);
 
-  // Add form states
+  // Form states
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [newMateriId, setNewMateriId] = useState("");
   const [newClassGroup, setNewClassGroup] = useState("7-A");
   const [newDueDate, setNewDueDate] = useState<Date | undefined>(undefined);
+  const [status, setStatus] = useState<"Draft" | "Aktif" | "Selesai">("Draft");
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -88,43 +92,79 @@ export default function TugasGuruContent() {
     localStorage.setItem("guru_tugas_list", JSON.stringify(updated));
   };
 
-  const handleDelete = (id: string, title: string) => {
+  const handleDelete = (id: string, titleStr: string) => {
     const updated = tugasList.filter((item) => item.id !== id);
     saveToStorage(updated);
-    toast.success(`Tugas "${title}" berhasil dihapus.`);
+    toast.success(`Tugas "${titleStr}" berhasil dihapus.`);
   };
 
-  const handleAddTugas = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const titleInput = form.elements.namedItem("title") as HTMLInputElement;
-    const descInput = form.elements.namedItem("description") as HTMLTextAreaElement;
+  const handleOpenAddModal = () => {
+    setEditingTugas(null);
+    setTitle("");
+    setDescription("");
+    setNewMateriId("");
+    setNewClassGroup("7-A");
+    setNewDueDate(undefined);
+    setStatus("Draft");
+    setIsModalOpen(true);
+  };
 
-    if (!titleInput.value || !newDueDate || !newMateriId) {
+  const handleStartEdit = (tugas: Tugas) => {
+    setEditingTugas(tugas);
+    setTitle(tugas.title);
+    setDescription(tugas.description);
+    setNewMateriId(tugas.materiId);
+    setNewClassGroup(tugas.classGroup);
+    setNewDueDate(tugas.dueDate ? new Date(tugas.dueDate) : undefined);
+    setStatus(tugas.status);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmitTugas = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!title || !newDueDate || !newMateriId) {
       toast.error("Harap isi semua kolom wajib!");
       return;
     }
 
-    const newTugas: Tugas = {
-      id: `tugas-${Date.now()}`,
-      title: titleInput.value,
-      classGroup: newClassGroup,
-      dueDate: newDueDate.toISOString(),
-      submittedCount: 0,
-      totalStudents: 30,
-      status: "Draft",
-      materiId: newMateriId,
-      description: descInput.value || "Selesaikan tugas ini berdasarkan materi yang ditautkan.",
-    };
+    if (editingTugas) {
+      // Edit mode
+      const updated = tugasList.map((t) => {
+        if (t.id === editingTugas.id) {
+          return {
+            ...t,
+            title,
+            classGroup: newClassGroup,
+            dueDate: newDueDate.toISOString(),
+            materiId: newMateriId,
+            description,
+            status,
+          };
+        }
+        return t;
+      });
+      saveToStorage(updated);
+      toast.success(`Tugas "${title}" berhasil diubah!`);
+    } else {
+      // Add mode
+      const newTugas: Tugas = {
+        id: `tugas-${Date.now()}`,
+        title,
+        classGroup: newClassGroup,
+        dueDate: newDueDate.toISOString(),
+        submittedCount: 0,
+        totalStudents: 30,
+        status: "Draft",
+        materiId: newMateriId,
+        description: description || "Selesaikan tugas ini berdasarkan materi yang ditautkan.",
+      };
+      const updated = [newTugas, ...tugasList];
+      saveToStorage(updated);
+      toast.success(`Tugas "${newTugas.title}" berhasil dibuat sebagai Draft!`);
+    }
 
-    const updated = [newTugas, ...tugasList];
-    saveToStorage(updated);
-    toast.success(`Tugas "${newTugas.title}" berhasil dibuat sebagai Draft!`);
     setIsModalOpen(false);
-    form.reset();
-    setNewMateriId("");
-    setNewClassGroup("7-A");
-    setNewDueDate(undefined);
   };
 
   const handleGradeTask = (id: string) => {
@@ -203,7 +243,7 @@ export default function TugasGuruContent() {
         </div>
         <div className="flex gap-2 w-full md:w-auto shrink-0">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenAddModal}
             className="flex items-center justify-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold shadow-xs transition-colors active:scale-98 w-full md:w-auto cursor-pointer"
           >
             <Plus size={16} />
@@ -353,10 +393,17 @@ export default function TugasGuruContent() {
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => handleGradeTask(tugas.id)}
-                        className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
                         title="Detail & Nilai Tugas"
                       >
-                        <Award size={14} /> Detail
+                        <FileText size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleStartEdit(tugas)}
+                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                        title="Edit Tugas"
+                      >
+                        <Pencil size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(tugas.id, tugas.title)}
@@ -381,19 +428,21 @@ export default function TugasGuruContent() {
         </div>
       </div>
 
-      {/* Dialog Modal for adding new task */}
+      {/* Dialog Modal for adding/editing task */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ClipboardList className="w-5 h-5 text-emerald-600" />
-              Buat Tugas Baru
+              {editingTugas ? "Ubah Tugas" : "Buat Tugas Baru"}
             </DialogTitle>
             <DialogDescription>
-              Lengkapi informasi di bawah ini untuk membuat tugas baru bagi siswa Anda.
+              {editingTugas
+                ? "Sesuaikan informasi tugas di bawah ini."
+                : "Lengkapi informasi di bawah ini untuk membuat tugas baru bagi siswa Anda."}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleAddTugas} className="space-y-4 pt-2">
+          <form onSubmit={handleSubmitTugas} className="space-y-4 pt-2">
             <div>
               <label className="text-xs font-bold text-slate-500 uppercase block mb-1">
                 Nama Tugas <span className="text-rose-500">*</span>
@@ -402,6 +451,8 @@ export default function TugasGuruContent() {
                 type="text"
                 name="title"
                 required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Contoh: Latihan Soal Fotosintesis"
               />
             </div>
@@ -456,6 +507,27 @@ export default function TugasGuruContent() {
               </div>
             </div>
 
+            {editingTugas && (
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase block mb-1">
+                  Status Tugas
+                </label>
+                <Select
+                  value={status}
+                  onValueChange={(val: "Draft" | "Aktif" | "Selesai") => setStatus(val)}
+                >
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Pilih Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Draft">Draft</SelectItem>
+                    <SelectItem value="Aktif">Aktif</SelectItem>
+                    <SelectItem value="Selesai">Selesai</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div>
               <label className="text-xs font-bold text-slate-500 uppercase block mb-1">
                 Deskripsi / Instruksi
@@ -463,6 +535,8 @@ export default function TugasGuruContent() {
               <Textarea
                 name="description"
                 rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Instruksi pengerjaan tugas bagi siswa..."
               />
             </div>
@@ -479,7 +553,7 @@ export default function TugasGuruContent() {
                 type="submit"
                 className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 active:scale-98 transition-all flex items-center justify-center gap-1 cursor-pointer"
               >
-                <Plus size={16} /> Simpan Draft
+                {editingTugas ? "Simpan Perubahan" : "Simpan Draft"}
               </button>
             </div>
           </form>

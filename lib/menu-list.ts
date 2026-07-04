@@ -193,7 +193,12 @@ export function getMenuList(pathname: string): Group[] {
               {
                 href: "/dashboard/guru/pembelajaran/tugas",
                 label: "Tugas",
-                active: pathname.includes("/dashboard/guru/pembelajaran/tugas"),
+                active: pathname.includes("/dashboard/guru/pembelajaran/tugas") && !pathname.includes("/dashboard/guru/pembelajaran/rekap-tugas"),
+              },
+              {
+                href: "/dashboard/guru/pembelajaran/rekap-tugas",
+                label: "Rekap Tugas",
+                active: pathname.includes("/dashboard/guru/pembelajaran/rekap-tugas"),
               },
             ],
           },

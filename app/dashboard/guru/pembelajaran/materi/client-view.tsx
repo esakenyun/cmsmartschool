@@ -11,6 +11,7 @@ import {
   EyeOff,
   Trash2,
   FileText,
+  Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -44,8 +45,12 @@ export default function MateriGuruContent() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingMateri, setEditingMateri] = useState<Materi | null>(null);
 
-  // Add form states
+  // Form states
+  const [title, setTitle] = useState("");
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
   const [newCategory, setNewCategory] = useState("Biologi");
   const [newType, setNewType] = useState("PDF");
 
@@ -79,46 +84,79 @@ export default function MateriGuruContent() {
     saveToStorage(updated);
   };
 
-  const handleDelete = (id: string, title: string) => {
+  const handleDelete = (id: string, titleStr: string) => {
     const updated = materiList.filter((item) => item.id !== id);
     saveToStorage(updated);
-    toast.success(`Materi "${title}" berhasil dihapus.`);
+    toast.success(`Materi "${titleStr}" berhasil dihapus.`);
   };
 
-  const handleAddMateri = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const titleInput = form.elements.namedItem("title") as HTMLInputElement;
-    const linkInput = form.elements.namedItem("link") as HTMLInputElement;
-    const descInput = form.elements.namedItem("description") as HTMLTextAreaElement;
+  const handleOpenAddModal = () => {
+    setEditingMateri(null);
+    setTitle("");
+    setLink("");
+    setDescription("");
+    setNewCategory("Biologi");
+    setNewType("PDF");
+    setIsModalOpen(true);
+  };
 
-    if (!titleInput.value || !linkInput.value) {
+  const handleStartEdit = (materi: Materi) => {
+    setEditingMateri(materi);
+    setTitle(materi.title);
+    setLink(materi.link);
+    setDescription(materi.description);
+    setNewCategory(materi.category);
+    setNewType(materi.type);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmitMateri = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!title || !link) {
       toast.error("Harap isi semua kolom yang wajib!");
       return;
     }
 
-    const newMateri: Materi = {
-      id: `materi-${Date.now()}`,
-      title: titleInput.value,
-      category: newCategory,
-      type: newType,
-      dateAdded: new Date().toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      status: "Draft",
-      link: linkInput.value,
-      description: descInput.value || "Tidak ada deskripsi materi.",
-    };
+    if (editingMateri) {
+      // Edit mode
+      const updated = materiList.map((m) => {
+        if (m.id === editingMateri.id) {
+          return {
+            ...m,
+            title,
+            category: newCategory,
+            type: newType,
+            link,
+            description,
+          };
+        }
+        return m;
+      });
+      saveToStorage(updated);
+      toast.success(`Materi "${title}" berhasil diubah!`);
+    } else {
+      // Add mode
+      const newMateri: Materi = {
+        id: `materi-${Date.now()}`,
+        title,
+        category: newCategory,
+        type: newType,
+        dateAdded: new Date().toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+        status: "Draft",
+        link,
+        description: description || "Tidak ada deskripsi materi.",
+      };
+      const updated = [newMateri, ...materiList];
+      saveToStorage(updated);
+      toast.success(`Materi "${newMateri.title}" ditambahkan sebagai Draft!`);
+    }
 
-    const updated = [newMateri, ...materiList];
-    saveToStorage(updated);
-    toast.success(`Materi "${newMateri.title}" ditambahkan sebagai Draft!`);
     setIsModalOpen(false);
-    form.reset();
-    setNewCategory("Biologi");
-    setNewType("PDF");
   };
 
   const categories = ["Semua", ...Array.from(new Set(materiList.map((m) => m.category)))];
@@ -161,7 +199,7 @@ export default function MateriGuruContent() {
         </div>
         <div className="flex gap-2 w-full md:w-auto shrink-0">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenAddModal}
             className="flex items-center justify-center gap-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold shadow-xs transition-colors active:scale-98 w-full md:w-auto cursor-pointer"
           >
             <Plus size={16} />
@@ -292,6 +330,13 @@ export default function MateriGuruContent() {
                         <ExternalLink size={16} />
                       </a>
                       <button
+                        onClick={() => handleStartEdit(materi)}
+                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                        title="Edit Materi"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
                         onClick={() => handleDelete(materi.id, materi.title)}
                         className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                         title="Hapus"
@@ -314,19 +359,21 @@ export default function MateriGuruContent() {
         </div>
       </div>
 
-      {/* Dialog Modal for adding new material */}
+      {/* Dialog Modal for adding/editing material */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-emerald-600" />
-              Tambah Materi Ajar Baru
+              {editingMateri ? "Ubah Materi Ajar" : "Tambah Materi Ajar Baru"}
             </DialogTitle>
             <DialogDescription>
-              Lengkapi informasi di bawah ini untuk membuat dokumen materi pembelajaran baru.
+              {editingMateri
+                ? "Sesuaikan informasi materi pembelajaran di bawah ini."
+                : "Lengkapi informasi di bawah ini untuk membuat dokumen materi pembelajaran baru."}
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleAddMateri} className="space-y-4 pt-2">
+          <form onSubmit={handleSubmitMateri} className="space-y-4 pt-2">
             <div>
               <label className="text-xs font-bold text-slate-500 uppercase block mb-1">
                 Judul Materi <span className="text-rose-500">*</span>
@@ -335,6 +382,8 @@ export default function MateriGuruContent() {
                 type="text"
                 name="title"
                 required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Contoh: Struktur Sel Tumbuhan"
               />
             </div>
@@ -383,6 +432,8 @@ export default function MateriGuruContent() {
                 type="url"
                 name="link"
                 required
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
                 placeholder="https://docs.google.com/..."
               />
             </div>
@@ -394,6 +445,8 @@ export default function MateriGuruContent() {
               <Textarea
                 name="description"
                 rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Masukkan deskripsi atau instruksi pengerjaan..."
               />
             </div>
@@ -410,7 +463,7 @@ export default function MateriGuruContent() {
                 type="submit"
                 className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 active:scale-98 transition-all flex items-center gap-1 cursor-pointer"
               >
-                <Plus size={16} /> Simpan Draft
+                {editingMateri ? "Simpan Perubahan" : "Simpan Draft"}
               </button>
             </div>
           </form>

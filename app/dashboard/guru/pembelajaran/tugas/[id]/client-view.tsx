@@ -282,6 +282,59 @@ export default function TugasDetailClient({ id }: TugasDetailClientProps) {
         </div>
       </div>
 
+      {/* Stats Summary Cards Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Total Siswa */}
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">Total Siswa</span>
+            <span className="text-3xl font-bold text-slate-900 mt-1 block">{submissions.length}</span>
+          </div>
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <Users size={20} />
+          </div>
+        </div>
+
+        {/* Terkumpul */}
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">Terkumpul</span>
+            <span className="text-3xl font-bold text-emerald-600 mt-1 block">
+              {submissions.filter((s) => s.status !== "Not Submitted").length}
+            </span>
+          </div>
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
+            <CheckCircle2 size={20} />
+          </div>
+        </div>
+
+        {/* Dinilai */}
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">Dinilai</span>
+            <span className="text-3xl font-bold text-blue-600 mt-1 block">
+              {submissions.filter((s) => s.status === "Graded").length}
+            </span>
+          </div>
+          <div className="p-3 bg-blue-50 rounded-xl text-blue-600">
+            <Award size={20} />
+          </div>
+        </div>
+
+        {/* Belum Kirim */}
+        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">Belum Kirim</span>
+            <span className="text-3xl font-bold text-rose-600 mt-1 block">
+              {submissions.filter((s) => s.status === "Not Submitted").length}
+            </span>
+          </div>
+          <div className="p-3 bg-rose-50 rounded-xl text-rose-600">
+            <BookOpen size={20} />
+          </div>
+        </div>
+      </div>
+
       {/* Stats and Submission Management */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: List of Submissions */}

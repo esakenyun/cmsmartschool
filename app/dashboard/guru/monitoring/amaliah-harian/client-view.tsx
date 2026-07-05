@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Search,
-  BookOpen,
   CheckCircle2,
   Heart,
   ChevronDown,
   Sparkles,
+  ChevronRight,
+  BookOpen,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TableSkeleton } from "@/components/skeletons/table-skeleton";
+import { CardSkeleton } from "@/components/skeletons/card-skeleton";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,7 +23,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface StudentAmaliah {
+interface Student {
+  name: string;
+  classGroup: string;
+}
+
+const STUDENTS_LIST: Student[] = [
+  { name: "Aditya Pratama", classGroup: "7-A" },
+  { name: "Budi Santoso", classGroup: "7-A" },
+  { name: "Citra Lestari", classGroup: "7-A" },
+  { name: "Dedi Wijaya", classGroup: "7-A" },
+  { name: "Eka Rahayu", classGroup: "7-A" },
+  { name: "Kiki Amelia", classGroup: "7-A" },
+  { name: "Lutfi Hakim", classGroup: "7-A" },
+  { name: "Mega Utami", classGroup: "7-A" },
+  { name: "Naufal Abdi", classGroup: "7-A" },
+  { name: "Oki Setiana", classGroup: "7-A" },
+  { name: "Fadel Muhammad", classGroup: "7-B" },
+  { name: "Gita Gutawa", classGroup: "7-B" },
+  { name: "Hendra Wijaya", classGroup: "7-B" },
+  { name: "Indah Permata", classGroup: "7-B" },
+  { name: "Joko Widodo", classGroup: "7-B" },
+];
+
+interface AmaliahRecord {
+  id: string;
+  date: string; // YYYY-MM-DD
   studentName: string;
   classGroup: string;
   shalat5Waktu: boolean;
@@ -30,67 +57,80 @@ interface StudentAmaliah {
   sedekah: boolean;
 }
 
-const INITIAL_AMALIAH_LIST: StudentAmaliah[] = [
-  { studentName: "Aditya Pratama", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: false },
-  { studentName: "Budi Santoso", classGroup: "7-A", shalat5Waktu: true, tadarrus: false, shalatSunnah: false, sedekah: true },
-  { studentName: "Citra Lestari", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: true },
-  { studentName: "Dedi Wijaya", classGroup: "7-A", shalat5Waktu: false, tadarrus: false, shalatSunnah: false, sedekah: false },
-  { studentName: "Eka Rahayu", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: false, sedekah: true },
-  { studentName: "Kiki Amelia", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: true },
-  { studentName: "Lutfi Hakim", classGroup: "7-A", shalat5Waktu: true, tadarrus: false, shalatSunnah: true, sedekah: false },
-  { studentName: "Mega Utami", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: false, sedekah: false },
-  { studentName: "Naufal Abdi", classGroup: "7-A", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: true },
-  { studentName: "Oki Setiana", classGroup: "7-A", shalat5Waktu: true, tadarrus: false, shalatSunnah: false, sedekah: false },
-  { studentName: "Fadel Muhammad", classGroup: "7-B", shalat5Waktu: true, tadarrus: true, shalatSunnah: false, sedekah: true },
-  { studentName: "Gita Gutawa", classGroup: "7-B", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: true },
-  { studentName: "Hendra Wijaya", classGroup: "7-B", shalat5Waktu: true, tadarrus: false, shalatSunnah: false, sedekah: false },
-  { studentName: "Indah Permata", classGroup: "7-B", shalat5Waktu: true, tadarrus: true, shalatSunnah: true, sedekah: false },
-  { studentName: "Joko Widodo", classGroup: "7-B", shalat5Waktu: true, tadarrus: false, shalatSunnah: false, sedekah: true },
-];
+const SEED_AMALIAH_LOGS: AmaliahRecord[] = [];
+const dates = ["2026-07-01", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05"];
+
+dates.forEach((d) => {
+  STUDENTS_LIST.forEach((s, idx) => {
+    SEED_AMALIAH_LOGS.push({
+      id: `amal-${d}-${s.name.replace(/\s+/g, "-").toLowerCase()}`,
+      date: d,
+      studentName: s.name,
+      classGroup: s.classGroup,
+      shalat5Waktu: idx % 3 !== 0,
+      tadarrus: idx % 2 === 0,
+      shalatSunnah: idx % 4 === 0,
+      sedekah: idx % 3 === 1,
+    });
+  });
+});
 
 export default function AmaliahClientView() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("Semua");
-  const [amaliahList, setAmaliahList] = useState<StudentAmaliah[]>([]);
+  const [logs, setLogs] = useState<AmaliahRecord[]>([]);
 
   useEffect(() => {
     const stored = localStorage.getItem("guru_amaliah_logs");
     if (stored) {
-      setAmaliahList(JSON.parse(stored));
+      setLogs(JSON.parse(stored));
     } else {
-      setAmaliahList(INITIAL_AMALIAH_LIST);
-      localStorage.setItem("guru_amaliah_logs", JSON.stringify(INITIAL_AMALIAH_LIST));
+      setLogs(SEED_AMALIAH_LOGS);
+      localStorage.setItem("guru_amaliah_logs", JSON.stringify(SEED_AMALIAH_LOGS));
     }
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
-  const saveList = (updated: StudentAmaliah[]) => {
-    setAmaliahList(updated);
+  const saveLogs = (updated: AmaliahRecord[]) => {
+    setLogs(updated);
     localStorage.setItem("guru_amaliah_logs", JSON.stringify(updated));
   };
 
-  const handleToggleAmaliah = (studentName: string, field: keyof Omit<StudentAmaliah, "studentName" | "classGroup">) => {
-    const updated = amaliahList.map((item) => {
-      if (item.studentName === studentName) {
-        const nextValue = !item[field];
-        return {
-          ...item,
-          [field]: nextValue,
-        };
-      }
-      return item;
-    });
-    saveList(updated);
-    toast.info(`Data ibadah harian ${studentName} diperbarui.`);
+  // Get student's amaliah stats for today
+  const getTodayAmaliah = (studentName: string) => {
+    const todayStr = new Date().toISOString().split("T")[0];
+    const found = logs.find((l) => l.date === todayStr && l.studentName === studentName);
+    
+    if (found) {
+      const items = [found.shalat5Waktu, found.tadarrus, found.shalatSunnah, found.sedekah];
+      const completed = items.filter(Boolean).length;
+      return {
+        shalat5Waktu: found.shalat5Waktu,
+        tadarrus: found.tadarrus,
+        shalatSunnah: found.shalatSunnah,
+        sedekah: found.sedekah,
+        completed,
+        rate: Math.round((completed / items.length) * 100),
+      };
+    }
+
+    return {
+      shalat5Waktu: false,
+      tadarrus: false,
+      shalatSunnah: false,
+      sedekah: false,
+      completed: 0,
+      rate: 0,
+    };
   };
 
   const uniqueClasses = ["Semua", "7-A", "7-B"];
 
-  const filteredAmaliah = amaliahList.filter((item) => {
-    const matchesSearch = item.studentName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesClass = selectedClass === "Semua" || item.classGroup === selectedClass;
+  const filteredStudents = STUDENTS_LIST.filter((student) => {
+    const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesClass = selectedClass === "Semua" || student.classGroup === selectedClass;
     return matchesSearch && matchesClass;
   });
 
@@ -98,22 +138,26 @@ export default function AmaliahClientView() {
     return (
       <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <Skeleton className="h-24 w-full rounded-xl" />
-        <TableSkeleton />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header card */}
+      {/* Header section */}
       <div className="bg-emerald-50 p-6 rounded-xl border border-emerald-100 flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <h3 className="text-emerald-900 font-bold text-xl flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-emerald-600 animate-pulse" />
-            Amaliah Harian Siswa
+            Monitoring Amaliah Harian Siswa
           </h3>
           <p className="text-emerald-700 text-sm mt-1">
-            Monitor pembiasaan dan amaliah ibadah harian siswa seperti shalat wajib, mengaji/tadarrus, shalat sunnah dhuha/tahajjud, dan sedekah harian.
+            Monitor pembiasaan ibadah harian siswa. Klik pada checkbox hari ini untuk pencatatan cepat.
           </p>
         </div>
       </div>
@@ -146,96 +190,91 @@ export default function AmaliahClientView() {
         </div>
       </div>
 
-      {/* Amaliah Table */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-100 text-sm">
-            <thead>
-              <tr className="text-left text-xs font-bold text-slate-400 uppercase tracking-wider">
-                <th className="pb-3 font-semibold">Nama Siswa</th>
-                <th className="pb-3 font-semibold">Kelas</th>
-                <th className="pb-3 font-semibold text-center">Shalat 5 Waktu</th>
-                <th className="pb-3 font-semibold text-center">Mengaji/Tadarrus</th>
-                <th className="pb-3 font-semibold text-center">Shalat Sunnah</th>
-                <th className="pb-3 font-semibold text-center">Sedekah</th>
-                <th className="pb-3 font-semibold text-right">Skor Harian</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredAmaliah.map((item, idx) => {
-                // Compute simple daily completion rate
-                const fields = [item.shalat5Waktu, item.tadarrus, item.shalatSunnah, item.sedekah];
-                const completedCount = fields.filter(Boolean).length;
-                const score = Math.round((completedCount / fields.length) * 100);
+      {/* Loop Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredStudents.map((student, idx) => {
+          const stats = getTodayAmaliah(student.name);
 
-                return (
-                  <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="py-3.5 pr-2 font-semibold text-slate-800">
-                      {item.studentName}
-                    </td>
-                    <td className="py-3.5 pr-2">
-                      <span className="inline-block px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600 font-semibold">
-                        {item.classGroup}
-                      </span>
-                    </td>
-                    <td className="py-3.5 text-center pr-2">
-                      <input
-                        type="checkbox"
-                        checked={item.shalat5Waktu}
-                        onChange={() => handleToggleAmaliah(item.studentName, "shalat5Waktu")}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="py-3.5 text-center pr-2">
-                      <input
-                        type="checkbox"
-                        checked={item.tadarrus}
-                        onChange={() => handleToggleAmaliah(item.studentName, "tadarrus")}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="py-3.5 text-center pr-2">
-                      <input
-                        type="checkbox"
-                        checked={item.shalatSunnah}
-                        onChange={() => handleToggleAmaliah(item.studentName, "shalatSunnah")}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="py-3.5 text-center pr-2">
-                      <input
-                        type="checkbox"
-                        checked={item.sedekah}
-                        onChange={() => handleToggleAmaliah(item.studentName, "sedekah")}
-                        className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
-                      />
-                    </td>
-                    <td className="py-3.5 text-right font-bold text-slate-800">
-                      <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                          score === 100
-                            ? "bg-green-50 text-green-700 border border-green-100"
-                            : score >= 50
-                            ? "bg-blue-50 text-blue-700 border border-blue-100"
-                            : "bg-rose-50 text-rose-700 border border-rose-100"
-                        }`}
-                      >
-                        {score}% ({completedCount}/4)
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-              {filteredAmaliah.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400 italic">
-                    Siswa tidak ditemukan.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+          return (
+            <div
+              key={idx}
+              className="bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md hover:border-emerald-200 transition-all flex flex-col justify-between group overflow-hidden"
+            >
+              <div className="p-5">
+                <div className="flex justify-between items-start border-b border-slate-100 pb-4">
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-base group-hover:text-emerald-700 transition-colors">
+                      {student.name}
+                    </h4>
+                    <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600 font-semibold">
+                      Kelas: {student.classGroup}
+                    </span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-sm shrink-0 border border-emerald-100">
+                    {student.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </div>
+                </div>
+
+                {/* Score Summary */}
+                <div className="mt-4 space-y-3">
+                  <div className="flex justify-between text-xs font-semibold text-slate-500">
+                    <span>Target Hari Ini</span>
+                    <span className={`font-bold ${stats.rate === 100 ? "text-emerald-600" : "text-blue-600"}`}>
+                      {stats.rate}% ({stats.completed}/4)
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        stats.rate === 100 ? "bg-emerald-500" : "bg-blue-500"
+                      }`}
+                      style={{ width: `${stats.rate}%` }}
+                    ></div>
+                  </div>
+
+                  {/* Quick Preview Summary */}
+                  <div className="grid grid-cols-2 gap-2 pt-2">
+                    <div className={`p-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 ${stats.shalat5Waktu ? "bg-green-50 border-green-100 text-green-700" : "bg-slate-50 border-slate-100 text-slate-400"}`}>
+                      <CheckCircle2 size={14} className={stats.shalat5Waktu ? "text-green-600" : "text-slate-300"} />
+                      <span className="truncate">Shalat 5W</span>
+                    </div>
+
+                    <div className={`p-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 ${stats.tadarrus ? "bg-green-50 border-green-100 text-green-700" : "bg-slate-50 border-slate-100 text-slate-400"}`}>
+                      <BookOpen size={14} className={stats.tadarrus ? "text-green-600" : "text-slate-300"} />
+                      <span className="truncate">Tadarrus</span>
+                    </div>
+
+                    <div className={`p-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 ${stats.shalatSunnah ? "bg-green-50 border-green-100 text-green-700" : "bg-slate-50 border-slate-100 text-slate-400"}`}>
+                      <CheckCircle2 size={14} className={stats.shalatSunnah ? "text-green-600" : "text-slate-300"} />
+                      <span className="truncate">Sunnah</span>
+                    </div>
+
+                    <div className={`p-2 rounded-lg border text-xs font-semibold flex items-center gap-1.5 ${stats.sedekah ? "bg-green-50 border-green-100 text-green-700" : "bg-slate-50 border-slate-100 text-slate-400"}`}>
+                      <Heart size={14} className={stats.sedekah ? "text-green-600" : "text-slate-300"} />
+                      <span className="truncate">Sedekah</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href={`/dashboard/guru/monitoring/amaliah-harian/${encodeURIComponent(student.name)}`}
+                className="w-full border-t border-slate-100 bg-slate-50 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 py-3 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer"
+              >
+                Lihat Detail Amaliah <ChevronRight size={14} />
+              </Link>
+            </div>
+          );
+        })}
+
+        {filteredStudents.length === 0 && (
+          <div className="col-span-full text-center py-12 text-slate-400 italic bg-white rounded-xl border border-slate-200">
+            Siswa tidak ditemukan untuk filter ini.
+          </div>
+        )}
       </div>
     </div>
   );

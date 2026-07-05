@@ -12,6 +12,7 @@ import {
   MoonStar,
   Image,
   PanelsTopLeft,
+  Monitor,
 } from "lucide-react";
 
 type Submenu = {
@@ -205,7 +206,7 @@ export function getMenuList(pathname: string): Group[] {
            {
             href: "/dashboard/guru/monitoring",
             label: "Monitoring",
-            icon: FileText,
+            icon: Monitor,
             active: pathname.includes("/dashboard/guru/monitoring"),
             submenus: [
               {

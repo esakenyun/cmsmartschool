@@ -202,6 +202,24 @@ export function getMenuList(pathname: string): Group[] {
               },
             ],
           },
+           {
+            href: "/dashboard/guru/monitoring",
+            label: "Monitoring",
+            icon: FileText,
+            active: pathname.includes("/dashboard/guru/monitoring"),
+            submenus: [
+              {
+                href: "/dashboard/guru/monitoring/presensi",
+                label: "Presensi",
+                active: pathname.includes("/dashboard/guru/monitoring/presensi"),
+              },
+              {
+                href: "/dashboard/guru/monitoring/amaliah-harian",
+                label: "Amaliah Harian",
+                active: pathname.includes("/dashboard/guru/monitoring/amaliah-harian") && !pathname.includes("/dashboard/guru/monitoring/amaliah-harian"),
+              },
+            ],
+          },
         ],
       },
       {
